@@ -43,6 +43,12 @@ class ChecklistTableViewCell: UITableViewCell {
         /****
             NOTE - When the user taps on taskStatus , we are marking the item as completed or notCompleted and when              the user taps on itemLabel ( via didSelectRowAt() ), we are changing the item's name
         ****/
+
+        // TODO: - I was here changing the fate of the universer, one again :))
+        
+        checklistItemField.addTarget(self, action: #selector(hideTextFieldOnLosingFocus(_:)), for: .editingChanged)
+        
+        
         
     }
 
@@ -55,6 +61,10 @@ extension ChecklistTableViewCell {
         
         taskStatusDelegate?.toggleBetweenTaskStatus(indexPathRow: self.tag)
         
+    }
+    
+    @objc fileprivate func hideTextFieldOnLosingFocus(_ textField: UITextField) {
+        textField.isHidden = true
     }
     
 }

@@ -85,6 +85,62 @@ class CoreDataOperations {
         
     }
     
+    func updateChecklist(oldChecklist: NSManagedObject, newChecklist: Checklist) -> Bool {
+        
+        // Fetching the App Delegate object
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return false }
+        
+        // Fetching the Managed Context object
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        // Removing the existing/old checklist
+        managedContext.delete(oldChecklist)
+        
+        // Saving the context
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("------- Error occured while deleting the checklist: \(error)")
+            fatalError()
+            //return false
+        }
+        
+        // Adding the updated checklist
+        if createNewChecklist(checklist: newChecklist) {
+            return true
+        }
+        
+        return false
+        
+    }
+    
+    /// For testing purpose only
+    func deleteAllChecklists() -> Bool {
+        
+        
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return false }
+        
+        // Grabbing the NSManagedObject context
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        // Creating a fetch request
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "List")
+        
+        // Performing batch deletion request
+        let batchDeletion = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        
+        
+        do {
+            try managedContext.execute(batchDeletion)
+        } catch let error as NSError {
+            print("------ Error in performing batch deletion: \(error)")
+            fatalError()
+        }
+        
+        return true
+    }
+    
+    
 }
 
 // MARK: - Supplementary functions

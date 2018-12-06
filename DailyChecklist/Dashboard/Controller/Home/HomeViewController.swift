@@ -53,7 +53,14 @@ class HomeViewController: UIViewController {
     
     @IBAction func editHome(_ sender: UIButton) {
         
+        if !CoreDataOperations.shared.deleteAllChecklists() {
+            presentErrorAlert(title: "Deletion failed", message: "Could not delete all the checklists")
+        }
         
+        checklistsArray.removeAll()
+        checklistCollectionView.reloadData()
+        
+        self.viewDidAppear(true)
         
     }
     

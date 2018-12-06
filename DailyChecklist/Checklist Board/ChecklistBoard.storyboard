@@ -71,7 +71,7 @@
                                                         <constraint firstAttribute="height" constant="30" id="ZrB-rI-LUZ"/>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="taskCompleted" value="YES"/>
+                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="taskCompleted" value="NO"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Checklist Item" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Le-JC-UtX">

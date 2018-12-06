@@ -36,8 +36,20 @@ class ChecklistViewController: UIViewController {
     
         setupChecklist()
     }
-    
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // To ensure that we are going back to the HomeViewController and view is not disappearing because of some interruption like a phone call or something else
+        
+        guard self.isMovingFromParent else { return }
+        
+        /// In case the updation failed, we need to present an error alert but since we are inside viewWillDisappear(), how will the disappearing ViewController present an alert on itself ? FIX IT !!!!
+        
+        CoreDataOperations.shared.updateChecklist(oldChecklist: selectedChecklist!, newChecklist: checklist)
+        
+    }
+    
     //MARK: - Actions for buttons
     @IBAction func actionEditName(_ sender: UIButton) {
         
@@ -124,6 +136,16 @@ extension ChecklistViewController: UITableViewDataSource {
         
         let taskName = checklist.items[indexPath.row].name
         
+        /// Checking if there was a new row added for checklist cell after user clicked on Add More
+        guard taskName != "\\n" else {
+            
+            cell.checklistItemField.isHidden = false
+            cell.checklistItemField.placeholder = "Checklist Item"
+            cell.checklistItemField.becomeFirstResponder()
+            
+            return cell
+        }
+        
         var strikeThroughEffect = Dictionary<NSAttributedString.Key,Any>()
         
         if checklist.items[indexPath.row].isCompleted {
@@ -185,10 +207,13 @@ extension ChecklistViewController: UITableViewDelegate {
                 return
             }
             
-            if textField.isEnabled {
+            // If the row above has it's textField shown , then the user can edit or add some new item , so we cannot add a new row below it
+            if !textField.isHidden {
                 
                 // There is an empty ChecklistCell row above, so we need not add one more row
                 // We are animating for the animating text field
+                
+                /// Animation here is not working as expected
                 
                 UIView.animate(withDuration: 1.0, delay: 0, options: [.curveEaseInOut], animations: {
                     textField.layer.backgroundColor = UIColor(hexString: "#7cb342").cgColor
@@ -202,11 +227,11 @@ extension ChecklistViewController: UITableViewDelegate {
                 
             }
             
-            // We are just appedning some garbage data to the Checklist Items as in order to increase the rows upon clicking AddMore button, we need to increase the array otherwise the app will crash
-//            checklist.items.append(<#T##newElement: ListItem##ListItem#>)
-//            checklistItems.append(ListItem(name: "Some Garbage data", isCompleted: false))
-//            tableView.insertRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: .bottom)
-//
+            // We are just appending some garbage data to the Checklist Items as in order to increase the rows upon clicking AddMore button, we need to increase the array otherwise the app will crash
+
+            checklist.items.append(ListItem(name: "\\n", isCompleted: false))
+            tableView.insertRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: .bottom)
+
             break
         
         default:
@@ -226,21 +251,30 @@ extension ChecklistViewController: UITextFieldDelegate {
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
-        if let cell = checklistTableView.cellForRow(at: IndexPath(row: textField.tag, section: 0)) as? ChecklistTableViewCell , textField == cell.checklistItemField {
+        // If the user entered no text inside the new row that was added upon clicking Add More, then we remove that row
+        if textField.text == "", checklist.items[textField.tag].name == "\\n" {
+            
+            checklist.items.removeLast()
+            checklistTableView.deleteRows(at: [IndexPath(row: textField.tag, section: 0)], with: .fade)
+            
+            return true
+            
+        }
+        
+        if let cell = checklistTableView.cellForRow(at: IndexPath(row: textField.tag, section: 0)) as? ChecklistTableViewCell , textField == cell.checklistItemField && textField.text != "" {
             
             // Setting the text of the textField as the label on the table
             checklist.items[textField.tag].name = (textField.text)!
             
             checklistTableView.reloadRows(at: [IndexPath(row: textField.tag, section: 0)], with: .fade)
+        }
             textField.text = ""
             textField.resignFirstResponder()
             textField.isHidden = true
             
             return true
-        }
-        
-        return false
     }
+
 
 }
 
