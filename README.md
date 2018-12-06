@@ -1,6 +1,6 @@
 # DailyChecklist
 
-**Currently Ongoing Project**
+**Currently Ongoing Project and is in initial stages**
 
 A To-Do application with following features (some features are still under work) : 
 1. Resetable List which resets *all or some* of the checklist items depending on the time specified
