@@ -46,6 +46,8 @@ class ChecklistViewController: UIViewController {
         
         /// In case the updation failed, we need to present an error alert but since we are inside viewWillDisappear(), how will the disappearing ViewController present an alert on itself ? FIX IT !!!!
         
+        deleteAnyEmptyFields()
+        
         CoreDataOperations.shared.updateChecklist(oldChecklist: selectedChecklist!, newChecklist: checklist)
         
     }
@@ -98,7 +100,23 @@ extension ChecklistViewController {
         }
         
         return listItemArray
+    }
+    
+    fileprivate func deleteAnyEmptyFields() {
         
+        // To remove any empty text fields so that it does not gets added in the checklist
+        
+        var currentIndex = 0
+        
+        for currentItem in checklist.items {
+            
+            if currentItem.name == "\\n" {
+                checklist.items.remove(at: currentIndex)
+            }
+            
+            currentIndex += 1
+            
+        }
     }
     
 }
@@ -242,6 +260,18 @@ extension ChecklistViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 50.0
+    }
+    
+    // To provide swipe to delete functionailty for each row
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        
+        let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+            self.checklist.items.remove(at: indexPath.row)
+            tableView.reloadData()
+        }
+        
+        return [deleteAction]
+        
     }
     
 }

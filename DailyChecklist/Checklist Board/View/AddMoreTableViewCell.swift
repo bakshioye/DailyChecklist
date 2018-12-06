@@ -10,8 +10,6 @@ import UIKit
 
 class AddMoreTableViewCell: UITableViewCell {
 
-    
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         
