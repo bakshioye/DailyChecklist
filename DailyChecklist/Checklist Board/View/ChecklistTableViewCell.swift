@@ -41,14 +41,10 @@ class ChecklistTableViewCell: UITableViewCell {
         taskStatus.addGestureRecognizer(tapGestureRecognizer)
         
         /****
-            NOTE - When the user taps on taskStatus , we are marking the item as completed or notCompleted and when              the user taps on itemLabel ( via didSelectRowAt() ), we are changing the item's name
+            NOTE - When the user taps on taskStatus , we are marking the item as completed or notCompleted and when the user taps on itemLabel ( via didSelectRowAt() ), we are changing the item's name
         ****/
-
-        // TODO: - I was here changing the fate of the universer, one again :))
         
-        checklistItemField.addTarget(self, action: #selector(hideTextFieldOnLosingFocus(_:)), for: .editingChanged)
-        
-        
+        checklistItemField.addTarget(self, action: #selector(hideTextFieldOnLosingFocus(_:)), for: .allEditingEvents)
         
     }
 
@@ -64,7 +60,11 @@ extension ChecklistTableViewCell {
     }
     
     @objc fileprivate func hideTextFieldOnLosingFocus(_ textField: UITextField) {
-        textField.isHidden = true
+        
+        if !textField.isFirstResponder {
+            textField.isHidden = true
+        }
+        
     }
     
 }
