@@ -52,7 +52,7 @@ class ChecklistViewController: UIViewController {
         
         guard self.isMovingFromParent else { return }
         
-        /// In case the updation failed, we need to present an error alert but since we are inside viewWillDisappear(), how will the disappearing ViewController present an alert on itself ? FIX IT !!!!
+        // FIXME: - In case the updation failed, we need to present an error alert but since we are inside viewWillDisappear(), how will the disappearing ViewController present an alert on itself ? FIX IT !!!!
         
         deleteAnyEmptyFields()
         
@@ -69,10 +69,15 @@ class ChecklistViewController: UIViewController {
             button.title = "Edit"
             editingModeEnabled = false
             
+            // Enabling the "Add more" button once again
+            toggleAddMoreButtonVisibility(hidden: false)
+            
         case false:
             button.title = "Save"
             editingModeEnabled = true
             
+            // Disabling the "Add more" button
+            toggleAddMoreButtonVisibility(hidden: true)
         }
     }
     
@@ -134,6 +139,22 @@ extension ChecklistViewController {
             currentIndex += 1
             
         }
+    }
+    
+    fileprivate func toggleAddMoreButtonVisibility(hidden: Bool) {
+        
+        guard let cell = checklistTableView.cellForRow(at: IndexPath(row: checklist.items.count, section: 0)) as? AddMoreTableViewCell else { return }
+        
+        if hidden {
+            cell.contentView.isHidden = true
+            cell.contentView.isUserInteractionEnabled = false
+        }
+        else {
+            cell.contentView.isHidden = false
+            cell.contentView.isUserInteractionEnabled = true
+            
+        }
+        
     }
     
 }
@@ -241,6 +262,7 @@ extension ChecklistViewController: UITableViewDelegate {
         case is AddMoreTableViewCell :
             
             /// We are not allowing to add new rows while the user is inside Editing mode
+            // Even when we disabled the Add More button(we hid the content view of the cell), if the user tapped in that area, delegate would still be called so we had to provide this condition
             guard !editingModeEnabled else { return }
             
             // Checking if there is already some empty cell for entering the item before adding a new cell
@@ -256,7 +278,7 @@ extension ChecklistViewController: UITableViewDelegate {
                 // There is an empty ChecklistCell row above, so we need not add one more row
                 // We are animating for the animating text field
                 
-                /// Animation here is not working as expected
+                // FIXME: - Animation here is not working as expected
                 
                 UIView.animate(withDuration: 1.0, delay: 0, options: [.curveEaseInOut], animations: {
                     textField.layer.backgroundColor = UIColor(hexString: "#7cb342").cgColor
