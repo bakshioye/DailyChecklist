@@ -42,7 +42,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DailyChecklist/Checklist Board/View/ChecklistTableViewCell.swift"
-            timestampString = "565791087.580129"
+            timestampString = "565857493.999911"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "28"
@@ -57,13 +57,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "DailyChecklist/Checklist Board/View/ChecklistTableViewCell.swift"
-            timestampString = "565791087.5805399"
+            filePath = "DailyChecklist/Checklist Board/Controller/ChecklistViewController.swift"
+            timestampString = "565857493.999988"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63"
-            landmarkName = "hideTextFieldOnLosingFocus(_:)"
+            startingLineNumber = "73"
+            endingLineNumber = "73"
+            landmarkName = "actionEdit(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

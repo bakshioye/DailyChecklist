@@ -9,12 +9,15 @@
 import UIKit
 import CoreData
 
+
 class ChecklistViewController: UIViewController {
 
     // MARK: - Outlet Variables
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var parentViewForTitleLabel: UIView!
     @IBOutlet weak var checklistTableView: UITableView!
+    
+    @IBOutlet weak var editBarButton: UIBarButtonItem!
     
     // MARK: - Programatically created UI Elements
     var textFieldForChecklistName: UITextField!
@@ -24,10 +27,15 @@ class ChecklistViewController: UIViewController {
     
     var selectedChecklist:NSManagedObject? // This will contain the user selected checklist as returned from Core Data
     
+    var editingModeEnabled:Bool = false // Used to detect whether the user wants to edit the checklist name and/or items
+    
     // MARK: - Overiding inbuilt functions
     override func viewDidLoad() {
         super.viewDidLoad()
      
+        // Hiding the keyboard when the user tapped anywhere else other than a text field
+        hideKeyboardWhenTappedAround()
+        
         // Disabling the Large title text for view controller
         navigationController?.navigationBar.prefersLargeTitles = false
         
@@ -53,10 +61,19 @@ class ChecklistViewController: UIViewController {
     }
     
     //MARK: - Actions for buttons
-    @IBAction func actionEditName(_ sender: UIButton) {
+    @IBAction func actionEdit(_ button: UIBarButtonItem) {
         
+        switch editingModeEnabled {
         
-        
+        case true:
+            button.title = "Edit"
+            editingModeEnabled = false
+            
+        case false:
+            button.title = "Save"
+            editingModeEnabled = true
+            
+        }
     }
     
 }
@@ -208,15 +225,23 @@ extension ChecklistViewController: UITableViewDelegate {
         
         case is ChecklistTableViewCell :
             
-            // Editing the already existing item's name
+            guard editingModeEnabled else {
+                // User wants to make changed to the name of the item
+                toggleBetweenTaskStatus(indexPathRow: indexPath.row)
+                return
+            }
             
+            // Editing the already existing item's name
             let cell = tableView.cellForRow(at: indexPath) as! ChecklistTableViewCell
             
             cell.checklistItemField.isHidden = false
-            cell.checklistItemField.placeholder = cell.checklistItemLabel.text
+            cell.checklistItemField.text = cell.checklistItemLabel.text
             cell.checklistItemField.becomeFirstResponder()
             
         case is AddMoreTableViewCell :
+            
+            /// We are not allowing to add new rows while the user is inside Editing mode
+            guard !editingModeEnabled else { return }
             
             // Checking if there is already some empty cell for entering the item before adding a new cell
             let cell = tableView.cellForRow(at: IndexPath(row: indexPath.row - 1, section: indexPath.section)) as! ChecklistTableViewCell
@@ -281,6 +306,16 @@ extension ChecklistViewController: UITextFieldDelegate {
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
+        // Checking if user did not change any text inside text field
+        if textField.text == checklist.items[textField.tag].name {
+            
+            textField.text = ""
+            textField.resignFirstResponder()
+            textField.isHidden = true
+            
+            return true
+        }
+        
         // If the user entered no text inside the new row that was added upon clicking Add More, then we remove that row
         if textField.text == "", checklist.items[textField.tag].name == "\\n" {
             
@@ -291,6 +326,7 @@ extension ChecklistViewController: UITextFieldDelegate {
             
         }
         
+        // Updating the label according to the text that was entered inside text field
         if let cell = checklistTableView.cellForRow(at: IndexPath(row: textField.tag, section: 0)) as? ChecklistTableViewCell , textField == cell.checklistItemField && textField.text != "" {
             
             // Setting the text of the textField as the label on the table

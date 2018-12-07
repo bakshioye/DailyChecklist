@@ -54,9 +54,7 @@ class ChecklistTableViewCell: UITableViewCell {
 extension ChecklistTableViewCell {
     
     @objc fileprivate func handleTapForTaskStatus(_ gesture: UITapGestureRecognizer) {
-        
-        taskStatusDelegate?.toggleBetweenTaskStatus(indexPathRow: self.tag)
-        
+        taskStatusDelegate?.toggleBetweenTaskStatus(indexPathRow: self.tag)        
     }
     
     @objc fileprivate func hideTextFieldOnLosingFocus(_ textField: UITextField) {
