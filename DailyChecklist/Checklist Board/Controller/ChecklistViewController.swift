@@ -8,7 +8,7 @@
 
 import UIKit
 import CoreData
-
+import IQKeyboardManagerSwift
 
 class ChecklistViewController: UIViewController {
 
@@ -72,12 +72,16 @@ class ChecklistViewController: UIViewController {
             // Enabling the "Add more" button once again
             toggleAddMoreButtonVisibility(hidden: false)
             
+            // Hide the keyboard and resignFirstResponder for the text field
+            dismissKeyboardAfterHittingSave()
+            
         case false:
             button.title = "Save"
             editingModeEnabled = true
             
             // Disabling the "Add more" button
             toggleAddMoreButtonVisibility(hidden: true)
+            
         }
     }
     
@@ -152,6 +156,23 @@ extension ChecklistViewController {
         else {
             cell.contentView.isHidden = false
             cell.contentView.isUserInteractionEnabled = true
+            
+        }
+    }
+    
+    fileprivate func dismissKeyboardAfterHittingSave() {
+        
+        for cellIndex in 0...checklist.items.count - 1 {
+            
+            if let cell = checklistTableView.cellForRow(at: IndexPath(row: cellIndex, section: 0)) as? ChecklistTableViewCell {
+                
+                // At a time only once textField will be first responder and when we get to that one, we will resignFirstResponder and will return
+                if cell.checklistItemField.isFirstResponder {
+                    cell.checklistItemField.resignFirstResponder()
+                    return
+                }
+                
+            }
             
         }
         
@@ -326,44 +347,45 @@ extension ChecklistViewController: UITableViewDelegate {
 // MARK: - Text Field delegate
 extension ChecklistViewController: UITextFieldDelegate {
 
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    // Called when textField loses focus or can act as a delegate for resignFirstResponder for textField
+    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
         
-        // Checking if user did not change any text inside text field
-        if textField.text == checklist.items[textField.tag].name {
+        if reason == .committed {
             
+            // Checking if user did not change any text inside text field
+            if textField.text == checklist.items[textField.tag].name {
+                
+                textField.text = ""
+                textField.resignFirstResponder()
+                textField.isHidden = true
+                
+                return
+            }
+            
+            // If the user entered no text inside the new row that was added upon clicking Add More, then we remove that row
+            if textField.text == "", checklist.items[textField.tag].name == "\\n" {
+                
+                checklist.items.removeLast()
+                checklistTableView.deleteRows(at: [IndexPath(row: textField.tag, section: 0)], with: .fade)
+                
+                return
+                
+            }
+            
+            // Updating the label according to the text that was entered inside text field
+            if let cell = checklistTableView.cellForRow(at: IndexPath(row: textField.tag, section: 0)) as? ChecklistTableViewCell , textField == cell.checklistItemField && textField.text != "" {
+                
+                // Setting the text of the textField as the label on the table
+                checklist.items[textField.tag].name = (textField.text)!
+                
+                checklistTableView.reloadRows(at: [IndexPath(row: textField.tag, section: 0)], with: .fade)
+            }
             textField.text = ""
             textField.resignFirstResponder()
             textField.isHidden = true
             
-            return true
         }
-        
-        // If the user entered no text inside the new row that was added upon clicking Add More, then we remove that row
-        if textField.text == "", checklist.items[textField.tag].name == "\\n" {
-            
-            checklist.items.removeLast()
-            checklistTableView.deleteRows(at: [IndexPath(row: textField.tag, section: 0)], with: .fade)
-            
-            return true
-            
-        }
-        
-        // Updating the label according to the text that was entered inside text field
-        if let cell = checklistTableView.cellForRow(at: IndexPath(row: textField.tag, section: 0)) as? ChecklistTableViewCell , textField == cell.checklistItemField && textField.text != "" {
-            
-            // Setting the text of the textField as the label on the table
-            checklist.items[textField.tag].name = (textField.text)!
-            
-            checklistTableView.reloadRows(at: [IndexPath(row: textField.tag, section: 0)], with: .fade)
-        }
-            textField.text = ""
-            textField.resignFirstResponder()
-            textField.isHidden = true
-            
-            return true
     }
-
-
 }
 
 // MARK: - Implementing TaskStatus protocol

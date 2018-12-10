@@ -59,7 +59,7 @@ extension ChecklistTableViewCell {
     
     @objc fileprivate func hideTextFieldOnLosingFocus(_ textField: UITextField) {
         
-        // When there is already a textfield enabled for one item and the user clicks anywhere else and that textfield loses focus, then we make that textfield disappear
+        // When there is already one textfield enabled for one item and the user clicks anywhere else and that textfield loses focus, then we make that textfield disappear
         if !textField.isFirstResponder {
             textField.isHidden = true
         }

@@ -22,6 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // enabling the "Move textfield up when keyboard shows"
         IQKeyboardManager.shared.enable = true
         
+        //Disabling the toolbar for the custom keyboard
+        IQKeyboardManager.shared.enableAutoToolbar = false
+        
         return true
     }
 
