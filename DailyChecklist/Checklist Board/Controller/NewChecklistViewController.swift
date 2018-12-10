@@ -118,6 +118,7 @@ extension NewChecklistViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: NEW_CHECKLIST_TABLEVIEW_CELL_ID, for: indexPath) as! NewChecklistTableViewCell
         
         cell.itemNameField.delegate = self
+        cell.itemNameField.becomeFirstResponder()
         
         return cell
         
@@ -159,7 +160,7 @@ extension NewChecklistViewController: UITableViewDelegate {
                 
             }
             
-            // We are just appedning some garbage data to the checklistItems as in order to increase the rows upon clicking AddMore button, we need to increase the array otherwise the app will crash
+            // We are just appending some garbage data to the checklistItems as in order to increase the rows upon clicking AddMore button, we need to increase the array otherwise the app will crash
             checklistItems.append(ListItem(name: "Some Garbage data", isCompleted: false))
             tableView.insertRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: .bottom)
 

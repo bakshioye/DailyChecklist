@@ -19,10 +19,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sLx-zO-c87">
-                                <rect key="frame" x="0.0" y="44" width="375" height="70"/>
+                                <rect key="frame" x="0.0" y="88" width="375" height="70"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zM9-wm-XA1">
-                                        <rect key="frame" x="10" y="5" width="305" height="60"/>
+                                        <rect key="frame" x="10.000000000000004" y="5" width="49.333333333333343" height="60"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="60" id="eIi-VC-MsP"/>
                                         </constraints>
@@ -30,30 +30,16 @@
                                         <color key="textColor" red="0.12941176469999999" green="0.12941176469999999" blue="0.12941176469999999" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6tG-n9-t8a">
-                                        <rect key="frame" x="325" y="15" width="40" height="40"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="40" id="hal-QS-zTN"/>
-                                            <constraint firstAttribute="height" constant="40" id="v0E-BR-Dvd"/>
-                                        </constraints>
-                                        <state key="normal" title="Button" image="editIconBlue"/>
-                                        <connections>
-                                            <action selector="actionEditName:" destination="iHh-2d-U4H" eventType="touchUpInside" id="41M-ut-zVE"/>
-                                        </connections>
-                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="zM9-wm-XA1" firstAttribute="centerY" secondItem="sLx-zO-c87" secondAttribute="centerY" id="2Gb-4U-Kaq"/>
-                                    <constraint firstItem="6tG-n9-t8a" firstAttribute="centerY" secondItem="sLx-zO-c87" secondAttribute="centerY" id="PvC-Hw-PTl"/>
-                                    <constraint firstAttribute="trailing" secondItem="6tG-n9-t8a" secondAttribute="trailing" constant="10" id="SqN-dV-AX1"/>
                                     <constraint firstItem="zM9-wm-XA1" firstAttribute="leading" secondItem="sLx-zO-c87" secondAttribute="leading" constant="10" id="XkA-b3-B7j"/>
-                                    <constraint firstItem="6tG-n9-t8a" firstAttribute="leading" secondItem="zM9-wm-XA1" secondAttribute="trailing" constant="10" id="eqd-KZ-0HL"/>
                                     <constraint firstAttribute="height" constant="70" id="yJ0-VZ-aRm"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Lyr-eR-G9f">
-                                <rect key="frame" x="0.0" y="114" width="375" height="664"/>
+                                <rect key="frame" x="0.0" y="158" width="375" height="620"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="checklistTVCell" rowHeight="50" id="NlZ-aO-f9j" customClass="ChecklistTableViewCell" customModule="DailyChecklist" customModuleProvider="target">
@@ -71,7 +57,7 @@
                                                         <constraint firstAttribute="height" constant="30" id="ZrB-rI-LUZ"/>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="taskCompleted" value="YES"/>
+                                                        <userDefinedRuntimeAttribute type="boolean" keyPath="taskCompleted" value="NO"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Checklist Item" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Le-JC-UtX">
@@ -162,16 +148,23 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="kZA-N5-XGf"/>
                     </view>
-                    <navigationItem key="navigationItem" largeTitleDisplayMode="never" id="RJP-pr-uVe"/>
+                    <navigationItem key="navigationItem" largeTitleDisplayMode="never" id="RJP-pr-uVe">
+                        <barButtonItem key="rightBarButtonItem" title="Edit" id="vuz-yk-XJw">
+                            <connections>
+                                <action selector="actionEdit:" destination="iHh-2d-U4H" id="0g8-2d-8hb"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="checklistTableView" destination="Lyr-eR-G9f" id="EiB-MK-EEk"/>
+                        <outlet property="editBarButton" destination="vuz-yk-XJw" id="IkV-qs-UGK"/>
                         <outlet property="parentViewForTitleLabel" destination="sLx-zO-c87" id="edv-88-FUn"/>
                         <outlet property="titleLabel" destination="zM9-wm-XA1" id="d3n-Ct-v2T"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DM0-bq-usS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="895" y="-364"/>
+            <point key="canvasLocation" x="1836" y="-364.28571428571428"/>
         </scene>
         <!--New Checklist View Controller-->
         <scene sceneID="aQ5-e1-4uK">
@@ -343,9 +336,26 @@
             </objects>
             <point key="canvasLocation" x="893.60000000000002" y="380.54187192118229"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="onl-w3-54g">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="i8c-jX-moV" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="g7z-p5-wuZ">
+                        <rect key="frame" x="0.0" y="44" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="iHh-2d-U4H" kind="relationship" relationship="rootViewController" id="deq-G4-3V5"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9w3-os-kRj" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="893.60000000000002" y="-364.28571428571428"/>
+        </scene>
     </scenes>
     <resources>
         <image name="addMoreIcon" width="512" height="512"/>
-        <image name="editIconBlue" width="512" height="512"/>
     </resources>
 </document>

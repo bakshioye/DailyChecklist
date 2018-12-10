@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import IQKeyboardManagerSwift
 
 class ChecklistViewController: UIViewController {
 
@@ -15,6 +16,8 @@ class ChecklistViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var parentViewForTitleLabel: UIView!
     @IBOutlet weak var checklistTableView: UITableView!
+    
+    @IBOutlet weak var editBarButton: UIBarButtonItem!
     
     // MARK: - Programatically created UI Elements
     var textFieldForChecklistName: UITextField!
@@ -24,10 +27,15 @@ class ChecklistViewController: UIViewController {
     
     var selectedChecklist:NSManagedObject? // This will contain the user selected checklist as returned from Core Data
     
+    var editingModeEnabled:Bool = false // Used to detect whether the user wants to edit the checklist name and/or items
+    
     // MARK: - Overiding inbuilt functions
     override func viewDidLoad() {
         super.viewDidLoad()
      
+        // Hiding the keyboard when the user tapped anywhere else other than a text field
+        hideKeyboardWhenTappedAround()
+        
         // Disabling the Large title text for view controller
         navigationController?.navigationBar.prefersLargeTitles = false
         
@@ -36,13 +44,45 @@ class ChecklistViewController: UIViewController {
     
         setupChecklist()
     }
-    
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // To ensure that we are going back to the HomeViewController and view is not disappearing because of some interruption like a phone call or something else
+        
+        guard self.isMovingFromParent else { return }
+        
+        // FIXME: - In case the updation failed, we need to present an error alert but since we are inside viewWillDisappear(), how will the disappearing ViewController present an alert on itself ? FIX IT !!!!
+        
+        deleteAnyEmptyFields()
+        
+        CoreDataOperations.shared.updateChecklist(oldChecklist: selectedChecklist!, newChecklist: checklist)
+        
+    }
+    
     //MARK: - Actions for buttons
-    @IBAction func actionEditName(_ sender: UIButton) {
+    @IBAction func actionEdit(_ button: UIBarButtonItem) {
         
+        switch editingModeEnabled {
         
-        
+        case true:
+            button.title = "Edit"
+            editingModeEnabled = false
+            
+            // Enabling the "Add more" button once again
+            toggleAddMoreButtonVisibility(hidden: false)
+            
+            // Hide the keyboard and resignFirstResponder for the text field
+            dismissKeyboardAfterHittingSave()
+            
+        case false:
+            button.title = "Save"
+            editingModeEnabled = true
+            
+            // Disabling the "Add more" button
+            toggleAddMoreButtonVisibility(hidden: true)
+            
+        }
     }
     
 }
@@ -86,6 +126,55 @@ extension ChecklistViewController {
         }
         
         return listItemArray
+    }
+    
+    fileprivate func deleteAnyEmptyFields() {
+        
+        // To remove any empty text fields so that it does not gets added in the checklist
+        
+        var currentIndex = 0
+        
+        for currentItem in checklist.items {
+            
+            if currentItem.name == "\\n" {
+                checklist.items.remove(at: currentIndex)
+            }
+            
+            currentIndex += 1
+            
+        }
+    }
+    
+    fileprivate func toggleAddMoreButtonVisibility(hidden: Bool) {
+        
+        guard let cell = checklistTableView.cellForRow(at: IndexPath(row: checklist.items.count, section: 0)) as? AddMoreTableViewCell else { return }
+        
+        if hidden {
+            cell.contentView.isHidden = true
+            cell.contentView.isUserInteractionEnabled = false
+        }
+        else {
+            cell.contentView.isHidden = false
+            cell.contentView.isUserInteractionEnabled = true
+            
+        }
+    }
+    
+    fileprivate func dismissKeyboardAfterHittingSave() {
+        
+        for cellIndex in 0...checklist.items.count - 1 {
+            
+            if let cell = checklistTableView.cellForRow(at: IndexPath(row: cellIndex, section: 0)) as? ChecklistTableViewCell {
+                
+                // At a time only once textField will be first responder and when we get to that one, we will resignFirstResponder and will return
+                if cell.checklistItemField.isFirstResponder {
+                    cell.checklistItemField.resignFirstResponder()
+                    return
+                }
+                
+            }
+            
+        }
         
     }
     
@@ -123,6 +212,16 @@ extension ChecklistViewController: UITableViewDataSource {
         cell.checklistItemField.tag = indexPath.row
         
         let taskName = checklist.items[indexPath.row].name
+        
+        /// Checking if there was a new row added for checklist cell after user clicked on Add More
+        guard taskName != "\\n" else {
+            
+            cell.checklistItemField.isHidden = false
+            cell.checklistItemField.placeholder = "Checklist Item"
+            cell.checklistItemField.becomeFirstResponder()
+            
+            return cell
+        }
         
         var strikeThroughEffect = Dictionary<NSAttributedString.Key,Any>()
         
@@ -168,15 +267,24 @@ extension ChecklistViewController: UITableViewDelegate {
         
         case is ChecklistTableViewCell :
             
-            // Editing the already existing item's name
+            guard editingModeEnabled else {
+                // User wants to make changed to the name of the item
+                toggleBetweenTaskStatus(indexPathRow: indexPath.row)
+                return
+            }
             
+            // Editing the already existing item's name
             let cell = tableView.cellForRow(at: indexPath) as! ChecklistTableViewCell
             
             cell.checklistItemField.isHidden = false
-            cell.checklistItemField.placeholder = cell.checklistItemLabel.text
+            cell.checklistItemField.text = cell.checklistItemLabel.text
             cell.checklistItemField.becomeFirstResponder()
             
         case is AddMoreTableViewCell :
+            
+            /// We are not allowing to add new rows while the user is inside Editing mode
+            // Even when we disabled the Add More button(we hid the content view of the cell), if the user tapped in that area, delegate would still be called so we had to provide this condition
+            guard !editingModeEnabled else { return }
             
             // Checking if there is already some empty cell for entering the item before adding a new cell
             let cell = tableView.cellForRow(at: IndexPath(row: indexPath.row - 1, section: indexPath.section)) as! ChecklistTableViewCell
@@ -185,10 +293,13 @@ extension ChecklistViewController: UITableViewDelegate {
                 return
             }
             
-            if textField.isEnabled {
+            // If the row above has it's textField shown , then the user can edit or add some new item , so we cannot add a new row below it
+            if !textField.isHidden {
                 
                 // There is an empty ChecklistCell row above, so we need not add one more row
                 // We are animating for the animating text field
+                
+                // FIXME: - Animation here is not working as expected
                 
                 UIView.animate(withDuration: 1.0, delay: 0, options: [.curveEaseInOut], animations: {
                     textField.layer.backgroundColor = UIColor(hexString: "#7cb342").cgColor
@@ -202,11 +313,11 @@ extension ChecklistViewController: UITableViewDelegate {
                 
             }
             
-            // We are just appedning some garbage data to the Checklist Items as in order to increase the rows upon clicking AddMore button, we need to increase the array otherwise the app will crash
-//            checklist.items.append(<#T##newElement: ListItem##ListItem#>)
-//            checklistItems.append(ListItem(name: "Some Garbage data", isCompleted: false))
-//            tableView.insertRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: .bottom)
-//
+            // We are just appending some garbage data to the Checklist Items as in order to increase the rows upon clicking AddMore button, we need to increase the array otherwise the app will crash
+
+            checklist.items.append(ListItem(name: "\\n", isCompleted: false))
+            tableView.insertRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: .bottom)
+
             break
         
         default:
@@ -219,29 +330,62 @@ extension ChecklistViewController: UITableViewDelegate {
         return 50.0
     }
     
+    // To provide swipe to delete functionailty for each row
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        
+        let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+            self.checklist.items.remove(at: indexPath.row)
+            tableView.reloadData()
+        }
+        
+        return [deleteAction]
+        
+    }
+    
 }
 
 // MARK: - Text Field delegate
 extension ChecklistViewController: UITextFieldDelegate {
 
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    // Called when textField loses focus or can act as a delegate for resignFirstResponder for textField
+    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
         
-        if let cell = checklistTableView.cellForRow(at: IndexPath(row: textField.tag, section: 0)) as? ChecklistTableViewCell , textField == cell.checklistItemField {
+        if reason == .committed {
             
-            // Setting the text of the textField as the label on the table
-            checklist.items[textField.tag].name = (textField.text)!
+            // Checking if user did not change any text inside text field
+            if textField.text == checklist.items[textField.tag].name {
+                
+                textField.text = ""
+                textField.resignFirstResponder()
+                textField.isHidden = true
+                
+                return
+            }
             
-            checklistTableView.reloadRows(at: [IndexPath(row: textField.tag, section: 0)], with: .fade)
+            // If the user entered no text inside the new row that was added upon clicking Add More, then we remove that row
+            if textField.text == "", checklist.items[textField.tag].name == "\\n" {
+                
+                checklist.items.removeLast()
+                checklistTableView.deleteRows(at: [IndexPath(row: textField.tag, section: 0)], with: .fade)
+                
+                return
+                
+            }
+            
+            // Updating the label according to the text that was entered inside text field
+            if let cell = checklistTableView.cellForRow(at: IndexPath(row: textField.tag, section: 0)) as? ChecklistTableViewCell , textField == cell.checklistItemField && textField.text != "" {
+                
+                // Setting the text of the textField as the label on the table
+                checklist.items[textField.tag].name = (textField.text)!
+                
+                checklistTableView.reloadRows(at: [IndexPath(row: textField.tag, section: 0)], with: .fade)
+            }
             textField.text = ""
             textField.resignFirstResponder()
             textField.isHidden = true
             
-            return true
         }
-        
-        return false
     }
-
 }
 
 // MARK: - Implementing TaskStatus protocol

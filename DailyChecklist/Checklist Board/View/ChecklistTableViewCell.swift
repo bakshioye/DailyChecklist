@@ -41,8 +41,10 @@ class ChecklistTableViewCell: UITableViewCell {
         taskStatus.addGestureRecognizer(tapGestureRecognizer)
         
         /****
-            NOTE - When the user taps on taskStatus , we are marking the item as completed or notCompleted and when              the user taps on itemLabel ( via didSelectRowAt() ), we are changing the item's name
+            NOTE - When the user taps on taskStatus , we are marking the item as completed or notCompleted and when the user taps on itemLabel ( via didSelectRowAt() ), we are changing the item's name
         ****/
+        
+        checklistItemField.addTarget(self, action: #selector(hideTextFieldOnLosingFocus(_:)), for: .allEditingEvents)
         
     }
 
@@ -52,8 +54,15 @@ class ChecklistTableViewCell: UITableViewCell {
 extension ChecklistTableViewCell {
     
     @objc fileprivate func handleTapForTaskStatus(_ gesture: UITapGestureRecognizer) {
+        taskStatusDelegate?.toggleBetweenTaskStatus(indexPathRow: self.tag)        
+    }
+    
+    @objc fileprivate func hideTextFieldOnLosingFocus(_ textField: UITextField) {
         
-        taskStatusDelegate?.toggleBetweenTaskStatus(indexPathRow: self.tag)
+        // When there is already one textfield enabled for one item and the user clicks anywhere else and that textfield loses focus, then we make that textfield disappear
+        if !textField.isFirstResponder {
+            textField.isHidden = true
+        }
         
     }
     

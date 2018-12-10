@@ -118,7 +118,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="YSY-wv-5nG"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Home" id="Nww-r7-9KM">
+                    <navigationItem key="navigationItem" title="Home" largeTitleDisplayMode="always" id="Nww-r7-9KM">
                         <barButtonItem key="leftBarButtonItem" systemItem="edit" id="gup-jP-GOn">
                             <connections>
                                 <action selector="editHome:" destination="Exb-BM-jNt" id="4ar-cG-neW"/>
