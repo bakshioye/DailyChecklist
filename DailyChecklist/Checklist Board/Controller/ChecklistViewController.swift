@@ -8,7 +8,6 @@
 
 import UIKit
 import CoreData
-import IQKeyboardManagerSwift
 
 class ChecklistViewController: UIViewController {
 
@@ -57,6 +56,18 @@ class ChecklistViewController: UIViewController {
         deleteAnyEmptyFields()
         
         CoreDataOperations.shared.updateChecklist(oldChecklist: selectedChecklist!, newChecklist: checklist)
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        // Passing the resetTime from here to settings page
+        if segue.identifier == "settings" {
+            
+            if let checklistSettingsVC = segue.destination as? ChecklistSettingsViewController {
+                checklistSettingsVC.resetTime = checklist.resetTime
+            }
+        }
         
     }
     
