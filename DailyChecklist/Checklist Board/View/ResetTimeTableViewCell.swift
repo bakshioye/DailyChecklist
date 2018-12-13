@@ -12,9 +12,18 @@ class ResetTimeTableViewCell: UITableViewCell {
 
     @IBOutlet weak var timeLabel:UILabel!
     
+    // MARK: - Overriding inbuilt Functions
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+     
+        // Disble gray selection style upon clicking
+        selectionStyle = .none
+        
     }
-
+    
+    override func prepareForReuse() {
+        timeLabel.textColor = UIColor(hexString: "#212121")
+    }
+    
 }
+

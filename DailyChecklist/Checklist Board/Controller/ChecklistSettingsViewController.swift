@@ -14,7 +14,7 @@ class ChecklistSettingsViewController: UIViewController {
     @IBOutlet weak var settingsTableView: UITableView!
 
     // MARK: - Variables to be used
-    var resetTime:Date?
+    var resetTime:TimeInterval?
     
     var settings = [ChecklistSetting]()
     
@@ -30,6 +30,15 @@ class ChecklistSettingsViewController: UIViewController {
         /// Populating the setting array
         // Adding Reset Time setting
         settings.append(ChecklistSetting(icon: #imageLiteral(resourceName: "settingResetIcon"), name: .ResetTime, value: parseResetTimeToString()))
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        // When we go to resetTime selection VC after tapping on resetTime setting cell and come back , the cell will still be selected, so to remove this we do this fix
+        if let selectedIndexRow = settingsTableView.indexPathForSelectedRow {
+            settingsTableView.deselectRow(at: selectedIndexRow, animated: true)
+        }
         
     }
 
@@ -49,6 +58,36 @@ extension ChecklistSettingsViewController {
         return "Not Set"
         
     }
+    
+    fileprivate func createAlertForResetNow(newResetTimeInSeconds: TimeInterval) {
+        
+        let alert = UIAlertController(title: "Reset checklist now ?", message: "Do you want to reset the checklist now ? If you select 'No', checklist will be reseted after \(newResetTimeInSeconds) ", preferredStyle: .alert)
+        
+        let yesAction = UIAlertAction(title: "Yes", style: .default) { (UIAlertAction) in
+            alert.dismiss(animated: true, completion: nil)
+            
+            
+        }
+        
+        alert.addAction(yesAction)
+        
+        let noAction = UIAlertAction(title: "No", style: .destructive) { (UIAlertAction) in
+            alert.dismiss(animated: true, completion: nil)
+            
+            
+        }
+        
+        alert.addAction(noAction)
+        
+        self.present(alert, animated: true, completion: nil)
+        
+    }
+    
+//    fileprivate func convertSecondsToDateFormat(inSeconds: TimeInterval) -> String {
+//        
+//        
+//        
+//    }
     
 }
 
@@ -106,6 +145,8 @@ extension ChecklistSettingsViewController: UITableViewDelegate {
             // User selects from various set of time labels
             let resetTimeVCObject = self.storyboard?.instantiateViewController(withIdentifier: CHECKLIST_SETTINGS_RESET_TIME_VC_IDENTIFIER) as! ResetTimeViewController
             
+            resetTimeVCObject.transferDataDelegate = self
+            
             self.navigationController?.pushViewController(resetTimeVCObject, animated: true)
             
         }
@@ -114,6 +155,23 @@ extension ChecklistSettingsViewController: UITableViewDelegate {
     
 }
 
+// MARK: - Conforming to TransferData Protocol
+extension ChecklistSettingsViewController: TransferData {
+    
+    func updateResetTime(newResetTime: TimeInterval) {
+        
+        print("-------- updateResetTime() called ----------")
+        
+        // Asking the user if they want to reset the list now or of they want to wait for the reset time FROM NOW ON WITHOUT RESETTING THE LIST AT THIS MOMENT
+        createAlertForResetNow(newResetTimeInSeconds: newResetTime)
+        
+        
+        
+        // Call a method to update the reset time inside Core Data
+        
+    }
+   
+}
 
 
 

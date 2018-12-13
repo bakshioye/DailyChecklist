@@ -18,11 +18,11 @@ class CoreDataOperations {
     // Creating private initialiser so that the user cannot access the initialiser of this class and can only use the shared instance of this class
     private init() { }
     
-    func createNewChecklist(checklist:Checklist) -> Bool {
+    func createNewChecklist(checklist:Checklist) -> DatabaseQueryResult {
         
         // Fething the App Delegate object
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return false // return failure
+            return .Failure // return failure
         }
         
         // Fetching the Managed Context object from App Delegate
@@ -43,6 +43,7 @@ class CoreDataOperations {
         list.setValue(itemsConvertedToString, forKey: "items")
         list.setValue(checklist.creationDate, forKey: "creationDate")
         list.setValue(checklist.resetTime, forKey: "resetTime") // Can be nil
+        list.setValue(checklist.lastResetAtTime, forKey: "lastResetAtTime") // Can be nil
         
         do {
             try managedContext.save()
@@ -53,7 +54,7 @@ class CoreDataOperations {
         }
         
         //successfully saved data to Core Data
-        return true
+        return .Success
         
     }
     
@@ -85,10 +86,10 @@ class CoreDataOperations {
         
     }
     
-    func updateChecklist(oldChecklist: NSManagedObject, newChecklist: Checklist) -> Bool {
+    func updateChecklist(oldChecklist: NSManagedObject, newChecklist: Checklist) -> DatabaseQueryResult {
         
         // Fetching the App Delegate object
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return false }
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return .Failure }
         
         // Fetching the Managed Context object
         let managedContext = appDelegate.persistentContainer.viewContext
@@ -106,19 +107,32 @@ class CoreDataOperations {
         }
         
         // Adding the updated checklist
-        if createNewChecklist(checklist: newChecklist) {
-            return true
+        if createNewChecklist(checklist: newChecklist) == .Success {
+            return .Success
         }
         
-        return false
+        return .Failure
+        
+    }
+    
+    func updateResetTime(newResetTimeInSeconds: TimeInterval) -> DatabaseQueryResult {
+        
+        // Fetching the App Delegate object
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return .Failure }
+        
+        // Fetching the managed context object
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        
+        return .Success
         
     }
     
     /// For testing purpose only
-    func deleteAllChecklists() -> Bool {
+    func deleteAllChecklists() -> DatabaseQueryResult {
         
         
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return false }
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return .Failure }
         
         // Grabbing the NSManagedObject context
         let managedContext = appDelegate.persistentContainer.viewContext
@@ -137,8 +151,9 @@ class CoreDataOperations {
             fatalError()
         }
         
-        return true
+        return .Success
     }
+    
     
     
 }
@@ -155,8 +170,6 @@ extension CoreDataOperations {
         **/
         
         var arrayOfItems = Array<String>()
-        
-        // TODO: - I WAS HERE AND WAS CHANGING THE FATE OF THE UNIVERSE :)
         
         for currentItem in items {
             arrayOfItems.append("\(currentItem.name)\\b\(currentItem.isCompleted)")

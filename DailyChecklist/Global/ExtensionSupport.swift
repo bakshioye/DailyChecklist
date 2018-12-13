@@ -60,6 +60,14 @@ extension NSObject {
     
 }
 
+extension Int {
+    
+    var isEven: Bool {
+        return self % 2 == 0
+    }
+    
+}
+
 extension UIColor {
     
     convenience init(hexString: String) {

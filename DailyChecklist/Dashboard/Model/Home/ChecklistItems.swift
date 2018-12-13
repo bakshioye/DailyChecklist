@@ -11,13 +11,15 @@ import Foundation
 struct Checklist {
     var name: String
     var creationDate: Date
-    var resetTime: Date?
+    var resetTime: TimeInterval?
+    var lastResetAtTime:Date?
     var items: [ListItem]
     
-    init(name: String, creationDate: Date, resetTime: Date?, items: [ListItem]) {
+    init(name: String, creationDate: Date, resetTime: TimeInterval?, items: [ListItem],lastResetAtTime:Date?) {
         self.name = name
         self.creationDate = creationDate
         self.resetTime = resetTime
+        self.lastResetAtTime = lastResetAtTime
         self.items = items        
     }
     
