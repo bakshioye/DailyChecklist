@@ -32,6 +32,10 @@
 		5356FEC8219D95A40064FF27 /* HomeCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5356FEC6219D95A40064FF27 /* HomeCVCell.swift */; };
 		5356FECF219D9A270064FF27 /* ChecklistBoard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5356FECE219D9A270064FF27 /* ChecklistBoard.storyboard */; };
 		5356FED1219D9AE40064FF27 /* ChecklistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5356FED0219D9AE40064FF27 /* ChecklistViewController.swift */; };
+		535FFBFD21C77E5A00829D02 /* CustomResetTimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535FFBFC21C77E5A00829D02 /* CustomResetTimeViewController.swift */; };
+		535FFBFF21C7985900829D02 /* CustomResetTimeSaveCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535FFBFE21C7985900829D02 /* CustomResetTimeSaveCell.swift */; };
+		535FFC0321C7A96500829D02 /* CustomResetTimeDomainCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535FFC0221C7A96500829D02 /* CustomResetTimeDomainCell.swift */; };
+		535FFC0521C7B2CE00829D02 /* ArrayWithLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535FFC0421C7B2CE00829D02 /* ArrayWithLabel.swift */; };
 		536382C521B4EE9C008DA8E3 /* CoreDataOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536382C421B4EE9C008DA8E3 /* CoreDataOperations.swift */; };
 		536382C721B50A15008DA8E3 /* NoChecklistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536382C621B50A15008DA8E3 /* NoChecklistView.swift */; };
 		536382C921B52F6C008DA8E3 /* NewChecklistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536382C821B52F6C008DA8E3 /* NewChecklistViewController.swift */; };
@@ -100,6 +104,10 @@
 		5356FEC6219D95A40064FF27 /* HomeCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCVCell.swift; sourceTree = "<group>"; };
 		5356FECE219D9A270064FF27 /* ChecklistBoard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ChecklistBoard.storyboard; sourceTree = "<group>"; };
 		5356FED0219D9AE40064FF27 /* ChecklistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistViewController.swift; sourceTree = "<group>"; };
+		535FFBFC21C77E5A00829D02 /* CustomResetTimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomResetTimeViewController.swift; sourceTree = "<group>"; };
+		535FFBFE21C7985900829D02 /* CustomResetTimeSaveCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomResetTimeSaveCell.swift; sourceTree = "<group>"; };
+		535FFC0221C7A96500829D02 /* CustomResetTimeDomainCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomResetTimeDomainCell.swift; sourceTree = "<group>"; };
+		535FFC0421C7B2CE00829D02 /* ArrayWithLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ArrayWithLabel.swift; path = "DailyChecklist/Checklist Board/View/ArrayWithLabel.swift"; sourceTree = SOURCE_ROOT; };
 		536382C421B4EE9C008DA8E3 /* CoreDataOperations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataOperations.swift; sourceTree = "<group>"; };
 		536382C621B50A15008DA8E3 /* NoChecklistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoChecklistView.swift; sourceTree = "<group>"; };
 		536382C821B52F6C008DA8E3 /* NewChecklistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewChecklistViewController.swift; sourceTree = "<group>"; };
@@ -348,6 +356,7 @@
 				5356FED0219D9AE40064FF27 /* ChecklistViewController.swift */,
 				5389F17721BE69FB001FD6EE /* ChecklistSettingsViewController.swift */,
 				537037E821BFB330003E0B68 /* ResetTimeViewController.swift */,
+				535FFBFC21C77E5A00829D02 /* CustomResetTimeViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -361,6 +370,8 @@
 				53715F6921B0F99400EC97C9 /* TaskStatusView.swift */,
 				5389F17921BE875E001FD6EE /* ChecklistSettingsCell.swift */,
 				537037EA21BFB568003E0B68 /* ResetTimeTableViewCell.swift */,
+				535FFBFE21C7985900829D02 /* CustomResetTimeSaveCell.swift */,
+				535FFC0221C7A96500829D02 /* CustomResetTimeDomainCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -372,6 +383,7 @@
 				537037E621BF91D8003E0B68 /* ChecklistSetting.swift */,
 				53D61EDB21C0CBDD007445DB /* ResetTimeType.swift */,
 				53D61EDD21C0CC13007445DB /* ResetTimes.swift */,
+				535FFC0421C7B2CE00829D02 /* ArrayWithLabel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -632,6 +644,7 @@
 				5356FED1219D9AE40064FF27 /* ChecklistViewController.swift in Sources */,
 				53D61EE021C100D8007445DB /* TransferDataProtocol.swift in Sources */,
 				536382C721B50A15008DA8E3 /* NoChecklistView.swift in Sources */,
+				535FFBFD21C77E5A00829D02 /* CustomResetTimeViewController.swift in Sources */,
 				536382C921B52F6C008DA8E3 /* NewChecklistViewController.swift in Sources */,
 				53715F6A21B0F99400EC97C9 /* TaskStatusView.swift in Sources */,
 				536E455A21C238CF00A83067 /* Enums.swift in Sources */,
@@ -648,7 +661,10 @@
 				537037E721BF91D8003E0B68 /* ChecklistSetting.swift in Sources */,
 				5352DF90219A9CD10086B2BE /* DailyChecklist.xcdatamodeld in Sources */,
 				5356FEB1219D70C90064FF27 /* ChecklistItems.swift in Sources */,
+				535FFBFF21C7985900829D02 /* CustomResetTimeSaveCell.swift in Sources */,
+				535FFC0521C7B2CE00829D02 /* ArrayWithLabel.swift in Sources */,
 				5389F17A21BE875E001FD6EE /* ChecklistSettingsCell.swift in Sources */,
+				535FFC0321C7A96500829D02 /* CustomResetTimeDomainCell.swift in Sources */,
 				53D61EDC21C0CBDD007445DB /* ResetTimeType.swift in Sources */,
 				5352DFC7219AD06F0086B2BE /* ExtensionSupport.swift in Sources */,
 				533BC118219C18C2004FDECA /* HomeNavigationController.swift in Sources */,

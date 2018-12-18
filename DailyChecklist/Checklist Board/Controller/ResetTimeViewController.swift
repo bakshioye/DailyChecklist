@@ -85,6 +85,16 @@ extension ResetTimeViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
+        // We are checking if the user tapped on the label named "Custom"
+        if let cell = tableView.cellForRow(at: indexPath) as? ResetTimeTableViewCell , cell.timeLabel.text == "Custom" {
+            
+            let customResetTimeVCObject = self.storyboard?.instantiateViewController(withIdentifier: CHECKLIST_CUSTOM_RESET_TIME_VC_IDENTIFIER) as! CustomResetTimeViewController
+            
+            self.navigationController?.pushViewController(customResetTimeVCObject, animated: true)
+            
+            return
+        }
+        
         let selectedTime = resetTimesArray[indexPath.section].values[indexPath.row]
         
         transferDataDelegate?.updateResetTime(newResetTime: convertStringToSeconds(aString: selectedTime))

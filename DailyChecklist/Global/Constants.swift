@@ -10,11 +10,20 @@ import Foundation
 
 /// I have used \\s as seperator for checklist items
 
+/***
+TAGS used
+
+ 1001 -> Blur Effect
+ 
+**/
+
 // MARK: - View Controller ID
 
 let CHECKLIST_SETTINGS_VC_IDENTIFIER = "checklistSettingsVC" // if changed, change in  STORYBOARD's View Controller as well
 
 let CHECKLIST_SETTINGS_RESET_TIME_VC_IDENTIFIER = "resetTimeVC" // if changed, change in  STORYBOARD's View Controller as well
+
+let CHECKLIST_CUSTOM_RESET_TIME_VC_IDENTIFIER = "customResetTimeVC" // if changed, change in  STORYBOARD's View Controller as well
 
 // MARK: - CollectionView Cell ID
 
@@ -33,5 +42,10 @@ let NEW_CHECKLIST_TABLEVIEW_CELL_ID = "newChecklistTVCell" // if changed, change
 
 let CHECKLIST_SETTINGS_TABLEVIEW_CELL = "checklistSettingsTVCell" // if changed, change in  STORYBOARD's TableView cell as well
 
-let CHECKLIST_SETTINGS_RESET_TIME_TABLEVIEW_CELL = "resetTimeTVCell"
+let CHECKLIST_SETTINGS_RESET_TIME_TABLEVIEW_CELL = "resetTimeTVCell" // if changed, change in  STORYBOARD's TableView cell as well
+
+let CHECKLIST_CUSTOM_RESET_TIME_TABLEVIEW_CELL_SAVE = "customResetTimeTVCellSave" // if changed, change in  STORYBOARD's TableView cell as well
+
+let CHECKLIST_CUSTOM_RESET_TIME_TABLEVIEW_CELL_DOMAIN = "customResetTimeTVCellDomain" // if changed, change in  STORYBOARD's TableView cell as well
+
 

@@ -289,7 +289,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="49.666666666666664"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TFr-2X-HK8">
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TFr-2X-HK8">
                                             <rect key="frame" x="26" y="10" width="339" height="30"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="30" id="bp4-Wm-X7f"/>
@@ -319,6 +319,127 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hpb-Kv-ZiF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3528.8000000000002" y="-362.06896551724139"/>
+        </scene>
+        <!--Custom Reset Time View Controller-->
+        <scene sceneID="XkW-y6-xcH">
+            <objects>
+                <viewController storyboardIdentifier="customResetTimeVC" id="g50-bW-YJj" customClass="CustomResetTimeViewController" customModule="DailyChecklist" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="xNh-HA-Wqd">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="Pyg-7A-nfw">
+                                <rect key="frame" x="0.0" y="44" width="375" height="734"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="customResetTimeTVCellSave" id="fvu-e3-IZ3" customClass="CustomResetTimeSaveCell" customModule="DailyChecklist" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="55.333333333333343" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="fvu-e3-IZ3" id="5si-fC-jt7">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Save for future" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="asr-7E-AVb">
+                                                    <rect key="frame" x="15" y="7" width="113" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="30" id="y7Z-KR-Cuw"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="nbJ-ZG-JW4">
+                                                    <rect key="frame" x="311" y="9.3333333333333357" width="51" height="25"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="25" id="a6h-mP-JrU"/>
+                                                    </constraints>
+                                                    <connections>
+                                                        <action selector="actionForSaveSwitch:" destination="fvu-e3-IZ3" eventType="touchUpInside" id="7cg-6u-bNU"/>
+                                                    </connections>
+                                                </switch>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="asr-7E-AVb" firstAttribute="centerY" secondItem="5si-fC-jt7" secondAttribute="centerY" id="7wq-vz-AOf"/>
+                                                <constraint firstAttribute="trailing" secondItem="nbJ-ZG-JW4" secondAttribute="trailing" constant="15" id="AhI-m4-bum"/>
+                                                <constraint firstItem="asr-7E-AVb" firstAttribute="leading" secondItem="5si-fC-jt7" secondAttribute="leading" constant="15" id="ajo-lK-EuD"/>
+                                                <constraint firstItem="nbJ-ZG-JW4" firstAttribute="centerY" secondItem="5si-fC-jt7" secondAttribute="centerY" id="ele-V6-Qp5"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="saveForFutureSwitch" destination="nbJ-ZG-JW4" id="s5f-bi-UsA"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="customResetTimeTVCellDomain" id="zRI-Mu-93q" customClass="CustomResetTimeDomainCell" customModule="DailyChecklist" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="99.333333333333343" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="zRI-Mu-93q" id="aPj-v6-SW2">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EFu-r6-PuH">
+                                                    <rect key="frame" x="15" y="9.3333333333333357" width="60" height="25"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="25" id="Kom-sg-haz"/>
+                                                        <constraint firstAttribute="width" constant="60" id="iqd-ay-LIZ"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" weight="light" pointSize="20"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cellRightArrow" translatesAutoresizingMaskIntoConstraints="NO" id="Xnq-6g-sJR">
+                                                    <rect key="frame" x="350" y="14.333333333333336" width="15" height="15"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="15" id="CpC-L0-ScO"/>
+                                                        <constraint firstAttribute="width" constant="15" id="yAb-Se-dW6"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Not Set" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KNW-Kc-iVS">
+                                                    <rect key="frame" x="282" y="12" width="58" height="20"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="20" id="Ubq-Gl-7bS"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.45882352941176469" green="0.45882352941176469" blue="0.45882352941176469" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="EFu-r6-PuH" firstAttribute="centerY" secondItem="aPj-v6-SW2" secondAttribute="centerY" id="3wR-cb-0sa"/>
+                                                <constraint firstItem="Xnq-6g-sJR" firstAttribute="leading" secondItem="KNW-Kc-iVS" secondAttribute="trailing" constant="10" id="Ab9-Vl-pPu"/>
+                                                <constraint firstItem="Xnq-6g-sJR" firstAttribute="centerY" secondItem="aPj-v6-SW2" secondAttribute="centerY" id="HQg-W2-pFi"/>
+                                                <constraint firstAttribute="trailing" secondItem="Xnq-6g-sJR" secondAttribute="trailing" constant="10" id="Wk4-dS-uD1"/>
+                                                <constraint firstItem="KNW-Kc-iVS" firstAttribute="centerY" secondItem="aPj-v6-SW2" secondAttribute="centerY" id="gtP-D5-fSG"/>
+                                                <constraint firstItem="EFu-r6-PuH" firstAttribute="leading" secondItem="aPj-v6-SW2" secondAttribute="leading" constant="15" id="oc9-Hh-aAB"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="timeDomainNameLabel" destination="EFu-r6-PuH" id="ATo-Oc-LgZ"/>
+                                            <outlet property="timeDomainValueLabel" destination="KNW-Kc-iVS" id="lmv-uI-eL4"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="g50-bW-YJj" id="WRi-Dm-k1u"/>
+                                    <outlet property="delegate" destination="g50-bW-YJj" id="xta-Ey-hnD"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Pyg-7A-nfw" firstAttribute="leading" secondItem="CEf-EU-SUz" secondAttribute="leading" id="9CJ-TK-HoH"/>
+                            <constraint firstItem="CEf-EU-SUz" firstAttribute="trailing" secondItem="Pyg-7A-nfw" secondAttribute="trailing" id="HwZ-iz-voF"/>
+                            <constraint firstItem="Pyg-7A-nfw" firstAttribute="top" secondItem="CEf-EU-SUz" secondAttribute="top" id="b5O-20-y6I"/>
+                            <constraint firstItem="CEf-EU-SUz" firstAttribute="bottom" secondItem="Pyg-7A-nfw" secondAttribute="bottom" id="dhp-fY-mxJ"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="CEf-EU-SUz"/>
+                    </view>
+                    <connections>
+                        <outlet property="resetTimeTableView" destination="Pyg-7A-nfw" id="SAD-se-IdD"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Mdn-eK-ke3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4413.6000000000004" y="-362.06896551724139"/>
         </scene>
         <!--New Checklist View Controller-->
         <scene sceneID="aQ5-e1-4uK">
@@ -511,6 +632,7 @@
     </scenes>
     <resources>
         <image name="addMoreIcon" width="512" height="512"/>
+        <image name="cellRightArrow" width="491.51998901367188" height="491.51998901367188"/>
         <image name="infoIconBlue" width="225" height="225"/>
     </resources>
 </document>
