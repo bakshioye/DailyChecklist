@@ -20,7 +20,9 @@ class CustomResetTimeViewController: UIViewController {
     
     // MARK: - Programatically created elements
     var resetTimePickerView: UIPickerView!
+    
     var toolbarForPickerView: UIToolbar!
+    
     var labelForDomainDisplay: UILabel!
     
     // MARK: - Variables to be used
@@ -32,7 +34,9 @@ class CustomResetTimeViewController: UIViewController {
     // We are using this variable to make changes to the time selected and updating it accordingly
     var resetTimeSelected: (minute:Int,hour:Int,day:Int,week:Int,month:Int) = (0,0,0,0,0) {
         willSet {
-            print(newValue)
+            // FIXME: - Instead of reloading complete table, reload the particular domain row
+            /// When we are making the above change, we need to reload the first section ALWAYS, as we have set the updated time in the footer of the first section
+            resetTimeTableView.reloadData()
         }
     }
     
@@ -70,7 +74,34 @@ extension CustomResetTimeViewController: UITableViewDataSource {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: CHECKLIST_CUSTOM_RESET_TIME_TABLEVIEW_CELL_DOMAIN, for: indexPath) as! CustomResetTimeDomainCell
             
-            cell.timeDomainNameLabel.text = collectionOfResetTimeDomains[indexPath.section-1].name.rawValue
+            let currentTimeDomain = collectionOfResetTimeDomains[indexPath.section-1].name
+            
+            cell.timeDomainNameLabel.text = currentTimeDomain.rawValue
+            
+            // Checking if there is some time domain selected already or whether the table view is loaded for the first time
+            guard let currentSelectedTimeDomainUnwrapped = currentSelectedTimeDomain else { return cell }
+            
+            // Making sure we are updating only the correct row that was changed and not all the rows
+            guard currentTimeDomain == currentSelectedTimeDomainUnwrapped else { return cell }
+            
+            switch currentSelectedTimeDomainUnwrapped {
+                
+            case .Minute:
+                cell.timeDomainValueLabel.text = String(resetTimeSelected.minute)
+           
+            case .Hour:
+                cell.timeDomainValueLabel.text = String(resetTimeSelected.hour)
+            
+            case .Day:
+                cell.timeDomainValueLabel.text = String(resetTimeSelected.day)
+            
+            case .Week:
+                cell.timeDomainValueLabel.text = String(resetTimeSelected.week)
+            
+            case .Month:
+                cell.timeDomainValueLabel.text = String(resetTimeSelected.month)
+                
+            }
             
             return cell
             
@@ -92,6 +123,25 @@ extension CustomResetTimeViewController: UITableViewDelegate {
         currentSelectedTimeDomain = collectionOfResetTimeDomains[indexPath.section - 1].name
         
         pickerViewVisibility(will: .Show)
+        
+    }
+    
+    func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
+        
+        // We are displaying the time selected by the user only under the first section
+        guard section == 0 else { return "" }
+        
+        let monthsString = resetTimeSelected.month != 0 ? "\(resetTimeSelected.month) months " : ""
+        
+        let weeksString = resetTimeSelected.week != 0 ? "\(resetTimeSelected.week) weeks " : ""
+        
+        let daysString = resetTimeSelected.day != 0 ? "\(resetTimeSelected.day) days " : ""
+        
+        let hoursString = resetTimeSelected.hour != 0 ? "\(resetTimeSelected.hour) hours " : ""
+        
+        let minuteString = resetTimeSelected.minute != 0 ? "\(resetTimeSelected.minute) minutes " : ""
+        
+        return monthsString+weeksString+daysString+hoursString+minuteString
         
     }
     
@@ -122,6 +172,10 @@ extension CustomResetTimeViewController: UIPickerViewDataSource {
         }
         
         return 0
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 50.0
     }
     
 }
@@ -335,6 +389,12 @@ extension CustomResetTimeViewController {
 
     
     @objc func actionForDoneButton() {
+        
+        // Checking if the user wants to save this current custom time for future use
+        /// Save this time into some persistent storage like Core Data or User Defaults
+        if let cell = resetTimeTableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? CustomResetTimeSaveCell, cell.saveForFutureSwitch.isOn {
+            
+        }
         
         /// Fetch the selected time and transfer it to the ViewController before
         self.navigationController?.popViewController(animated: true)
