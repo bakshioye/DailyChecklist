@@ -10,8 +10,10 @@ import Foundation
 
 protocol TransferData {
     func updateResetTime(newResetTime: TimeInterval)
+    func customTimeSelected(inSeconds: TimeInterval)
 }
 
 extension TransferData {
     func updateResetTime(newResetTime: TimeInterval) { }
+    func customTimeSelected(inSeconds: TimeInterval) { }
 }

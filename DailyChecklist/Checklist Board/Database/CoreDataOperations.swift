@@ -6,7 +6,6 @@
 //  Copyright © 2018 Shubham Bakshi. All rights reserved.
 //
 
-import Foundation
 import CoreData
 import UIKit
 
@@ -125,6 +124,76 @@ class CoreDataOperations {
         
         
         return .Success
+        
+    }
+    
+    func saveCustomResetTime(_ customTime: TimeDomain) -> DatabaseQueryResult {
+        
+        // Fetching the App Delegate object
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return .Failure }
+        
+        // Fetching the managed context object
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        // Fetching the entity named "CustomResetTime"
+        let entity = NSEntityDescription.entity(forEntityName: "CustomResetTime", in: managedContext)!
+        
+        // Creating a NSManagedObject for inserting into Core Data
+        let customResetTime = NSManagedObject(entity: entity, insertInto: managedContext)
+        
+        // Adding the values to the NSManagedObject
+        customResetTime.setValue(customTime.minute, forKey: "minute")
+        customResetTime.setValue(customTime.hour, forKey: "hour")
+        customResetTime.setValue(customTime.day, forKey: "day")
+        customResetTime.setValue(customTime.week, forKey: "week")
+        customResetTime.setValue(customTime.month, forKey: "month")
+        
+        // Saving the context to save the time inside Core Data
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("------------- Error in SAVING CUSTOM RESET TIME : \(error)")
+            fatalError()
+            /// Return .Failure to indicate failure
+        }
+        
+        return .Success
+        
+    }
+    
+    func fetchSavedCustomResetTime() -> [TimeDomain] {
+        
+        var customResetTimes = [TimeDomain]()
+        
+        // Fetching the App Delegate object
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return [] }
+        
+        // Fetching the managed context object
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "CustomResetTime")
+        
+        // For temporarily saving the data coming from Core Data
+        var customResetTimeAsManagedObjects = [NSManagedObject]()
+        
+        do {
+            customResetTimeAsManagedObjects = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("----------- Error in fetching CUSTOM RESET TIME : \(error)")
+            fatalError()
+        }
+        
+        for currentManagedObject in customResetTimeAsManagedObjects {
+            
+            customResetTimes.append((currentManagedObject.value(forKey: "minute") as! Int,
+                                     currentManagedObject.value(forKey: "hour") as! Int,
+                                     currentManagedObject.value(forKey: "day") as! Int,
+                                     currentManagedObject.value(forKey: "week") as! Int,
+                                     currentManagedObject.value(forKey: "month") as! Int))
+            
+        }
+        
+        return customResetTimes
         
     }
     

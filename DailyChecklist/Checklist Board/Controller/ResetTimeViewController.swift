@@ -29,9 +29,12 @@ class ResetTimeViewController: UITableViewController {
     // MARK: - Local variables to be used
     let resetTimesArray:[ResetTimes] = [ResetTimes(category: .Minute, values: ["10 minutes","20 minutes","30 minutes"]),ResetTimes(category: .Hour, values: ["1 hour","2 hours","3 hours","5 hours","10 hours","12 hours","15 hours"]),ResetTimes(category: .Day, values: ["1 day","2 days"]),ResetTimes(category: .Week, values: ["1 week","2 weeks","3 weeks"]),ResetTimes(category: .Month, values: ["1 month","2 months"])]
     
-    var resetTimeSelected:String?
+    var resetTimeSelected:TimeInterval?
     
     var transferDataDelegate:TransferData?
+    
+    // Used to store "Custom time" from Core Data made by user in the past
+    var customResetTimes = [(TimeDomain)]()
     
     // MARK: - Overriding inbuilt functions
     override func viewDidLoad() {
@@ -40,6 +43,13 @@ class ResetTimeViewController: UITableViewController {
         customizeTableView()
         
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        customResetTimes = CoreDataOperations.shared.fetchSavedCustomResetTime()
+        /// We are reloading here as when we come back after creating our own custom time, it will be reflected here
+        tableView.reloadData()
+    }
 
 }
 
@@ -47,11 +57,31 @@ class ResetTimeViewController: UITableViewController {
 extension ResetTimeViewController {
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return resetTimesArray.count + 1 // +1 for Custom
+        
+        //If there are any custom Reset Times, we are allocating 1 section to that
+        let areThereCustomResetTimes = customResetTimes.count == 0 ? 0 : 1
+        
+        return resetTimesArray.count + areThereCustomResetTimes + 1 // +1 for Custom
+        
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == resetTimesArray.count ? 1 : resetTimesArray[section].values.count
+        
+        switch section {
+        
+        case resetTimesArray.count where customResetTimes.count > 0 : /// There are some custom reset time rows
+            return customResetTimes.count
+            
+        case resetTimesArray.count where customResetTimes.count == 0: /// There are no custom reset time rows so this will be "Custom" named row
+            return 1
+            
+        // Will always be the last section no matter what
+        case resetTimesArray.count + 1: /// There are some custom reset time rows but this is the "Custom" named row
+            return 1
+        
+        default: /// For all the other time rows
+            return resetTimesArray[section].values.count
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -59,11 +89,19 @@ extension ResetTimeViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: CHECKLIST_SETTINGS_RESET_TIME_TABLEVIEW_CELL, for: indexPath) as! ResetTimeTableViewCell
         
         // Checking if we are at the last cell of the tableView i.e. Custom Cell
-        guard !(indexPath.section == resetTimesArray.count) else {
+        guard !((indexPath.section == resetTimesArray.count && customResetTimes.count == 0) || indexPath.section == resetTimesArray.count + 1) else {
             
             cell.timeLabel.text = "Custom"
             cell.timeLabel.textColor = UIColor(hexString: "#007AFF")
             cell.timeLabel.font = UIFont.systemFont(ofSize: 18, weight: .thin)
+            
+            return cell
+        }
+        
+        // Checking if there are some custom reset time available
+        guard !(indexPath.section == resetTimesArray.count && customResetTimes.count > 0) else {
+            
+            cell.timeLabel.text = convertTimeDomainToString(customResetTimes[indexPath.row])
             
             return cell
         }
@@ -75,7 +113,23 @@ extension ResetTimeViewController {
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return section == resetTimesArray.count ? "Create your own" : "In \(resetTimesArray[section].category.rawValue)"        
+        
+        switch section {
+            
+        case resetTimesArray.count where customResetTimes.count > 0 : /// There are some custom reset time rows
+            return "You created these earlier"
+            
+        case resetTimesArray.count where customResetTimes.count == 0: /// There are no custom reset time rows so this will be "Custom" named row
+            return "Create your own"
+            
+        // Will always be the last section no matter what
+        case resetTimesArray.count + 1: /// There are some custom reset time rows but this is the "Custom" named row
+            return "Create your own"
+            
+        default: /// For all the other time rows
+            return "In \(resetTimesArray[section].category.rawValue)"
+        }
+        
     }
     
 }
@@ -89,6 +143,8 @@ extension ResetTimeViewController {
         if let cell = tableView.cellForRow(at: indexPath) as? ResetTimeTableViewCell , cell.timeLabel.text == "Custom" {
             
             let customResetTimeVCObject = self.storyboard?.instantiateViewController(withIdentifier: CHECKLIST_CUSTOM_RESET_TIME_VC_IDENTIFIER) as! CustomResetTimeViewController
+            
+            customResetTimeVCObject.transferDataBackDelegate = self
             
             self.navigationController?.pushViewController(customResetTimeVCObject, animated: true)
             
@@ -105,6 +161,17 @@ extension ResetTimeViewController {
     
 }
 
+// MARK: - Conforming to the Transfer Data Protocol
+extension ResetTimeViewController: TransferData {
+    
+    func customTimeSelected(inSeconds: TimeInterval) {
+        
+        // Here we have the custom time was selected
+        resetTimeSelected = inSeconds
+        
+    }
+    
+}
 
 // MARK: - Helper Functions
 extension ResetTimeViewController {
@@ -171,6 +238,22 @@ extension ResetTimeViewController {
         }
         
         return numberOfSecondsToBeReturned
+        
+    }
+    
+    fileprivate func convertTimeDomainToString(_ timeInDomain:TimeDomain) -> String {
+        
+        let monthsString = timeInDomain.month != 0 ? "\(timeInDomain.month) months " : ""
+        
+        let weeksString = timeInDomain.week != 0 ? "\(timeInDomain.week) weeks " : ""
+        
+        let daysString = timeInDomain.day != 0 ? "\(timeInDomain.day) days " : ""
+        
+        let hoursString = timeInDomain.hour != 0 ? "\(timeInDomain.hour) hours " : ""
+        
+        let minuteString = timeInDomain.minute != 0 ? "\(timeInDomain.minute) minutes " : ""
+        
+        return minuteString+hoursString+daysString+weeksString+monthsString
         
     }
 

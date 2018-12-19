@@ -25,6 +25,7 @@ class CustomResetTimeViewController: UIViewController {
     
     var labelForDomainDisplay: UILabel!
     
+    
     // MARK: - Variables to be used
     let collectionOfResetTimeDomains: [ArrayWithLabel<ResetTimeType,Int>] = [ ArrayWithLabel(name: ResetTimeType.Minute, values: Array(1...59)),ArrayWithLabel(name: ResetTimeType.Hour, values: Array(1...23)),ArrayWithLabel(name: ResetTimeType.Day, values: Array(1...6)),ArrayWithLabel(name: ResetTimeType.Week, values: Array(1...4)),ArrayWithLabel(name: ResetTimeType.Month, values: Array(1...11)) ]
     
@@ -32,7 +33,7 @@ class CustomResetTimeViewController: UIViewController {
     var currentSelectedTimeDomain: ResetTimeType!
     
     // We are using this variable to make changes to the time selected and updating it accordingly
-    var resetTimeSelected: (minute:Int,hour:Int,day:Int,week:Int,month:Int) = (0,0,0,0,0) {
+    var resetTimeSelected: TimeDomain = (0,0,0,0,0) {
         willSet {
             // FIXME: - Instead of reloading complete table, reload the particular domain row
             /// When we are making the above change, we need to reload the first section ALWAYS, as we have set the updated time in the footer of the first section
@@ -40,8 +41,11 @@ class CustomResetTimeViewController: UIViewController {
         }
     }
     
+    // For transfering the selcted time back to the previous View Controller
+    var transferDataBackDelegate: TransferData?
+    
     // MARK: - Overriding inbuilt functions
-    override func viewDidLoad(){
+    override func viewDidLoad() {
         super.viewDidLoad()
 
         setupNavigationBar()
@@ -386,15 +390,41 @@ extension CustomResetTimeViewController {
         }
         
     }
+    
+    fileprivate func convertSelctedTimeToSeconds() -> TimeInterval {
+        
+        var selectedTimeInSeconds:TimeInterval = 0
+        
+        selectedTimeInSeconds += Double(resetTimeSelected.minute * 60)
+        
+        selectedTimeInSeconds += Double(resetTimeSelected.hour * 3600)
+        
+        selectedTimeInSeconds += Double(resetTimeSelected.day * 86400)
+        
+        selectedTimeInSeconds += Double(resetTimeSelected.week * 604800)
+        
+        selectedTimeInSeconds += Double(resetTimeSelected.month * 2592000)
+        
+        return selectedTimeInSeconds
+        
+    }
 
     
     @objc func actionForDoneButton() {
         
-        // Checking if the user wants to save this current custom time for future use
+        // Checking if the user wants to save this custom time for future use
         /// Save this time into some persistent storage like Core Data or User Defaults
         if let cell = resetTimeTableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? CustomResetTimeSaveCell, cell.saveForFutureSwitch.isOn {
             
+            guard CoreDataOperations.shared.saveCustomResetTime(resetTimeSelected) == .Success else {
+                presentErrorAlert(title: "Custom reset time could not be saved", message: "The custom reset time that you have specified could not be saved at this moment, Please check the time once again!")
+                return
+            }
+            
         }
+        
+        // Transfering the selected custom time back to the previous View Controller
+        transferDataBackDelegate?.customTimeSelected(inSeconds: convertSelctedTimeToSeconds())
         
         /// Fetch the selected time and transfer it to the ViewController before
         self.navigationController?.popViewController(animated: true)

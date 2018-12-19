@@ -17,6 +17,10 @@ TAGS used
  
 **/
 
+// MARK: - TypeAlias To be used
+
+typealias TimeDomain = (minute:Int,hour:Int,day:Int,week:Int,month:Int)
+
 // MARK: - View Controller ID
 
 let CHECKLIST_SETTINGS_VC_IDENTIFIER = "checklistSettingsVC" // if changed, change in  STORYBOARD's View Controller as well
