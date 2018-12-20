@@ -155,7 +155,7 @@ extension ChecklistSettingsViewController: UITableViewDelegate {
     
 }
 
-// MARK: - Conforming to TransferData Protocol
+// MARK: -  Transfer Data Protocol Conformance
 extension ChecklistSettingsViewController: TransferData {
     
     func updateResetTime(newResetTime: TimeInterval) {

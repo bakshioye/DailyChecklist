@@ -11,6 +11,7 @@ import UIKit
 class HomeCVCell: UICollectionViewCell {
 
     @IBOutlet weak var someTitleLable: UILabel!
+    @IBOutlet weak var percentageLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
