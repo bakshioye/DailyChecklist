@@ -83,7 +83,7 @@
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EQn-8K-dXs">
                                                     <rect key="frame" x="8.3333333333333286" y="0.0" width="149.33333333333337" height="110"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
                                                     <color key="textColor" red="0.12941176470588234" green="0.12941176470588234" blue="0.12941176470588234" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -91,10 +91,10 @@
                                                     <rect key="frame" x="0.0" y="110" width="83" height="110"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </view>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bRp-YF-uQP">
-                                                    <rect key="frame" x="83" y="150" width="83" height="30"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bRp-YF-uQP">
+                                                    <rect key="frame" x="83" y="140" width="83" height="50"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="30" id="R7Y-m1-9hz"/>
+                                                        <constraint firstAttribute="height" constant="50" id="R7Y-m1-9hz"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -117,6 +117,7 @@
                                             <constraint firstItem="EQn-8K-dXs" firstAttribute="width" secondItem="8dJ-ct-hva" secondAttribute="width" multiplier="0.9" id="t8f-ip-tRH"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="checklistProgressView" destination="Snc-vc-5Q2" id="jfH-3b-uu4"/>
                                             <outlet property="percentageLabel" destination="bRp-YF-uQP" id="kwE-Lx-UFe"/>
                                             <outlet property="someTitleLable" destination="EQn-8K-dXs" id="wH4-gV-Ymy"/>
                                         </connections>

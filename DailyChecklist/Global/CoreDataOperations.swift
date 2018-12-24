@@ -28,7 +28,7 @@ class CoreDataOperations {
         let managedContext = appDelegate.persistentContainer.viewContext
         
         // Creating the entity object for List entity
-        let entity = NSEntityDescription.entity(forEntityName: "List", in: managedContext)!
+        let entity = NSEntityDescription.entity(forEntityName: CoreDataEntities.List.rawValue, in: managedContext)!
         
         // Creating Managed Object for List
         let list = NSManagedObject(entity: entity, insertInto: managedContext)
@@ -68,7 +68,7 @@ class CoreDataOperations {
         let managedContext = appDelegate.persistentContainer.viewContext
         
         // Creating a fetch request object
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "List")
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: CoreDataEntities.List.rawValue)
         
         // Creating an array of managed object to fetch from core data and return it
         var checklistsAsManagedObjectsFetched = [NSManagedObject]()
@@ -86,6 +86,8 @@ class CoreDataOperations {
     }
     
     func updateChecklist(oldChecklist: NSManagedObject, newChecklist: Checklist) -> DatabaseQueryResult {
+        
+        // FIXME: - Why is there NO ENTITY used inside this function
         
         // Fetching the App Delegate object
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return .Failure }
@@ -136,7 +138,7 @@ class CoreDataOperations {
         let managedContext = appDelegate.persistentContainer.viewContext
         
         // Fetching the entity named "CustomResetTime"
-        let entity = NSEntityDescription.entity(forEntityName: "CustomResetTime", in: managedContext)!
+        let entity = NSEntityDescription.entity(forEntityName: CoreDataEntities.CustomResetTime.rawValue, in: managedContext)!
         
         // Creating a NSManagedObject for inserting into Core Data
         let customResetTime = NSManagedObject(entity: entity, insertInto: managedContext)
@@ -171,7 +173,7 @@ class CoreDataOperations {
         // Fetching the managed context object
         let managedContext = appDelegate.persistentContainer.viewContext
         
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "CustomResetTime")
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: CoreDataEntities.CustomResetTime.rawValue)
         
         // For temporarily saving the data coming from Core Data
         var customResetTimeAsManagedObjects = [NSManagedObject]()
@@ -207,7 +209,7 @@ class CoreDataOperations {
         let managedContext = appDelegate.persistentContainer.viewContext
         
         // Creating a fetch request
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "List")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: CoreDataEntities.List.rawValue)
         
         // Performing batch deletion request
         let batchDeletion = NSBatchDeleteRequest(fetchRequest: fetchRequest)

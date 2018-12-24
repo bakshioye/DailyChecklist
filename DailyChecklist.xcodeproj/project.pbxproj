@@ -284,6 +284,7 @@
 				5352DFC6219AD06F0086B2BE /* ExtensionSupport.swift */,
 				53D61EDF21C100D8007445DB /* TransferDataProtocol.swift */,
 				536E455921C238CF00A83067 /* Enums.swift */,
+				536382C421B4EE9C008DA8E3 /* CoreDataOperations.swift */,
 			);
 			path = Global;
 			sourceTree = "<group>";
@@ -344,7 +345,6 @@
 				5356FECD219D99850064FF27 /* Model */,
 				5356FECC219D99810064FF27 /* View */,
 				5356FECB219D997B0064FF27 /* Controller */,
-				536382C321B4EC44008DA8E3 /* Database */,
 			);
 			path = "Checklist Board";
 			sourceTree = "<group>";
@@ -386,14 +386,6 @@
 				535FFC0421C7B2CE00829D02 /* ArrayWithLabel.swift */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		536382C321B4EC44008DA8E3 /* Database */ = {
-			isa = PBXGroup;
-			children = (
-				536382C421B4EE9C008DA8E3 /* CoreDataOperations.swift */,
-			);
-			path = Database;
 			sourceTree = "<group>";
 		};
 		DEF64FE82BB387B8C1AC3BCC /* Pods */ = {

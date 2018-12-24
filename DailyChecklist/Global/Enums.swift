@@ -12,3 +12,8 @@ public enum DatabaseQueryResult {
     case Success
     case Failure
 }
+
+public enum CoreDataEntities:String {
+    case List
+    case CustomResetTime
+}
