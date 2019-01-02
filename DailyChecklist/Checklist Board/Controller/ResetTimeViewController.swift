@@ -253,7 +253,7 @@ extension ResetTimeViewController {
         
         let minuteString = timeInDomain.minute != 0 ? "\(timeInDomain.minute) minutes " : ""
         
-        return minuteString+hoursString+daysString+weeksString+monthsString
+        return monthsString+weeksString+daysString+hoursString+minuteString
         
     }
 
