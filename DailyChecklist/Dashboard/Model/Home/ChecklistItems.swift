@@ -9,15 +9,15 @@
 import Foundation
 
 struct Checklist {
+    var checklistID: UUID
     var name: String
     var creationDate: Date
-    var resetTime: Date?
     var items: [ListItem]
     
-    init(name: String, creationDate: Date, resetTime: Date?, items: [ListItem]) {
+    init(name: String, creationDate: Date, items: [ListItem]) {
+        checklistID = UUID.init()
         self.name = name
         self.creationDate = creationDate
-        self.resetTime = resetTime
         self.items = items        
     }
     

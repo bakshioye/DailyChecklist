@@ -50,7 +50,7 @@ class NewChecklistViewController: UIViewController {
         checklistItems = fetchChecklistItems()
         
         // Inserting the Checklist into Core Data and checking the response
-        guard CoreDataOperations.shared.createNewChecklist(checklist: Checklist(name: checklistNameField.text!, creationDate: Date(), resetTime: nil, items: checklistItems)) else {
+        guard CoreDataOperations.shared.createNewChecklist(checklist: Checklist(name: checklistNameField.text!, creationDate: Date(), items: checklistItems)) == .Success else {
             
             // There was failure in creating checklist
             presentErrorAlert(title: "Checklist could not be created", message: "There was an error creating checklist at the moment, Please try again")

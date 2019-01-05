@@ -8,7 +8,6 @@
 
 import UIKit
 import CoreData
-import IQKeyboardManagerSwift
 
 class ChecklistViewController: UIViewController {
 
@@ -60,6 +59,18 @@ class ChecklistViewController: UIViewController {
         
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        // Passing the resetTime from here to settings page
+        if segue.identifier == "settings" {
+            
+            if let checklistSettingsVC = segue.destination as? ChecklistSettingsViewController {
+                //checklistSettingsVC.resetTime = checklist.resetTime
+            }
+        }
+        
+    }
+    
     //MARK: - Actions for buttons
     @IBAction func actionEdit(_ button: UIBarButtonItem) {
         
@@ -101,7 +112,7 @@ extension ChecklistViewController {
         let checklistItems = fetchListItemsFromString(listItemsInString: selectedChecklistUnwrapped.value(forKey: "items") as! String)
         
         // Creating the instance of the checklist
-        checklist = Checklist(name: selectedChecklistUnwrapped.value(forKey: "name") as! String, creationDate: selectedChecklistUnwrapped.value(forKey: "creationDate") as! Date, resetTime: selectedChecklistUnwrapped.value(forKey: "resetTime") as? Date, items: checklistItems)
+        checklist = Checklist(name: selectedChecklistUnwrapped.value(forKey: "name") as! String, creationDate: selectedChecklistUnwrapped.value(forKey: "creationDate") as! Date, items: checklistItems)
         
         // Setting the name of the checklist
         titleLabel.text = checklist.name

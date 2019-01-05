@@ -82,23 +82,43 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EQn-8K-dXs">
-                                                    <rect key="frame" x="8.3333333333333286" y="75" width="149.33333333333337" height="70"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="70" id="8JO-JL-6Mf"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                    <rect key="frame" x="8.3333333333333286" y="0.0" width="149.33333333333337" height="110"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="20"/>
                                                     <color key="textColor" red="0.12941176470588234" green="0.12941176470588234" blue="0.12941176470588234" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Snc-vc-5Q2">
+                                                    <rect key="frame" x="0.0" y="110" width="83" height="110"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bRp-YF-uQP">
+                                                    <rect key="frame" x="83" y="140" width="83" height="50"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="50" id="R7Y-m1-9hz"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                         </view>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstItem="EQn-8K-dXs" firstAttribute="centerY" secondItem="8dJ-ct-hva" secondAttribute="centerY" id="4Cq-dV-TMa"/>
-                                            <constraint firstItem="EQn-8K-dXs" firstAttribute="width" secondItem="8dJ-ct-hva" secondAttribute="width" multiplier="0.9" id="PkA-tf-zVq"/>
-                                            <constraint firstItem="EQn-8K-dXs" firstAttribute="centerX" secondItem="8dJ-ct-hva" secondAttribute="centerX" id="T3T-7e-6w9"/>
+                                            <constraint firstItem="Snc-vc-5Q2" firstAttribute="width" secondItem="8dJ-ct-hva" secondAttribute="width" multiplier="0.5" id="1HN-DI-ia3"/>
+                                            <constraint firstItem="Snc-vc-5Q2" firstAttribute="leading" secondItem="8dJ-ct-hva" secondAttribute="leading" id="1Re-b8-99m"/>
+                                            <constraint firstItem="bRp-YF-uQP" firstAttribute="width" secondItem="8dJ-ct-hva" secondAttribute="width" multiplier="0.5" id="4sh-sR-t53"/>
+                                            <constraint firstItem="Snc-vc-5Q2" firstAttribute="height" secondItem="8dJ-ct-hva" secondAttribute="height" multiplier="0.5" id="U4a-v6-hpi"/>
+                                            <constraint firstItem="bRp-YF-uQP" firstAttribute="centerY" secondItem="Snc-vc-5Q2" secondAttribute="centerY" id="by7-fh-Ilz"/>
+                                            <constraint firstItem="EQn-8K-dXs" firstAttribute="top" secondItem="8dJ-ct-hva" secondAttribute="top" id="c8t-qQ-bev"/>
+                                            <constraint firstAttribute="bottom" secondItem="Snc-vc-5Q2" secondAttribute="bottom" id="gXI-E5-mMs"/>
+                                            <constraint firstItem="bRp-YF-uQP" firstAttribute="leading" secondItem="Snc-vc-5Q2" secondAttribute="trailing" id="mVf-UG-qJl"/>
+                                            <constraint firstItem="EQn-8K-dXs" firstAttribute="centerX" secondItem="8dJ-ct-hva" secondAttribute="centerX" id="qdu-cL-ONC"/>
+                                            <constraint firstItem="EQn-8K-dXs" firstAttribute="height" secondItem="8dJ-ct-hva" secondAttribute="height" multiplier="0.5" id="snT-W1-oYN"/>
+                                            <constraint firstItem="EQn-8K-dXs" firstAttribute="width" secondItem="8dJ-ct-hva" secondAttribute="width" multiplier="0.9" id="t8f-ip-tRH"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="checklistProgressView" destination="Snc-vc-5Q2" id="jfH-3b-uu4"/>
+                                            <outlet property="percentageLabel" destination="bRp-YF-uQP" id="kwE-Lx-UFe"/>
                                             <outlet property="someTitleLable" destination="EQn-8K-dXs" id="wH4-gV-Ymy"/>
                                         </connections>
                                     </collectionViewCell>
