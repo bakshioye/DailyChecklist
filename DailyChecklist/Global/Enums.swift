@@ -16,4 +16,6 @@ public enum DatabaseQueryResult {
 public enum CoreDataEntities:String {
     case List
     case CustomResetTime
+    case LastResetAtTime
+    case ResetTime
 }

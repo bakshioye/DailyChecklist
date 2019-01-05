@@ -51,10 +51,10 @@ extension HomeCVCell {
         let circularPath = UIBezierPath(arcCenter: .zero, radius: radius, startAngle: 0, endAngle: CGFloat(2 * CFloat.pi) , clockwise: true)
 
         // Creating layer for background
-        createCircularLayer(circularPath: circularPath, circularPathRadius: radius, strokeColor: UIColor(hexString: "#9e9e9e").cgColor, strokeEnd: 1)
+        createCircularLayer(circularPath: circularPath, circularPathRadius: radius, strokeColor: UIColor(hexString: "#e0e0e0").cgColor, strokeEnd: 1)
         
         // Creating layer for foreground
-        createCircularLayer(circularPath: circularPath, circularPathRadius: radius, strokeColor: UIColor(hexString: "#33691e").cgColor, strokeEnd: tasksCompleted/totalTasks)
+        createCircularLayer(circularPath: circularPath, circularPathRadius: radius, strokeColor: UIColor(hexString: "#66bb6a").cgColor, strokeEnd: tasksCompleted/totalTasks)
         
         // Setting text for the label
         let labelText = "\(Int(tasksCompleted))/\(Int(totalTasks))"

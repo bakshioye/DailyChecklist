@@ -65,16 +65,12 @@ extension ChecklistSettingsViewController {
         
         let yesAction = UIAlertAction(title: "Yes", style: .default) { (UIAlertAction) in
             alert.dismiss(animated: true, completion: nil)
-            
-            
         }
         
         alert.addAction(yesAction)
         
         let noAction = UIAlertAction(title: "No", style: .destructive) { (UIAlertAction) in
-            alert.dismiss(animated: true, completion: nil)
-            
-            
+            alert.dismiss(animated: true, completion: nil)                        
         }
         
         alert.addAction(noAction)

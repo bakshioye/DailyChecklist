@@ -118,10 +118,3 @@ extension UIViewController {
     
 }
 
-//extension TimeInterval {
-//
-//    var convertToTimeDomain: TimeDomain {
-//
-//    }
-//
-//}

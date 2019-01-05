@@ -65,7 +65,7 @@ class ChecklistViewController: UIViewController {
         if segue.identifier == "settings" {
             
             if let checklistSettingsVC = segue.destination as? ChecklistSettingsViewController {
-                checklistSettingsVC.resetTime = checklist.resetTime
+                //checklistSettingsVC.resetTime = checklist.resetTime
             }
         }
         
@@ -112,7 +112,7 @@ extension ChecklistViewController {
         let checklistItems = fetchListItemsFromString(listItemsInString: selectedChecklistUnwrapped.value(forKey: "items") as! String)
         
         // Creating the instance of the checklist
-        checklist = Checklist(name: selectedChecklistUnwrapped.value(forKey: "name") as! String, creationDate: selectedChecklistUnwrapped.value(forKey: "creationDate") as! Date, resetTime: selectedChecklistUnwrapped.value(forKey: "resetTime") as? TimeInterval, items: checklistItems, lastResetAtTime: selectedChecklistUnwrapped.value(forKey: "lastResetAtTime") as? Date)
+        checklist = Checklist(name: selectedChecklistUnwrapped.value(forKey: "name") as! String, creationDate: selectedChecklistUnwrapped.value(forKey: "creationDate") as! Date, items: checklistItems)
         
         // Setting the name of the checklist
         titleLabel.text = checklist.name

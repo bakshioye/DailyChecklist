@@ -41,8 +41,7 @@ class CoreDataOperations {
         list.setValue(checklist.name, forKey: "name")
         list.setValue(itemsConvertedToString, forKey: "items")
         list.setValue(checklist.creationDate, forKey: "creationDate")
-        list.setValue(checklist.resetTime, forKey: "resetTime") // Can be nil
-        list.setValue(checklist.lastResetAtTime, forKey: "lastResetAtTime") // Can be nil
+        list.setValue(checklist.checklistID, forKey: "checklistID")
         
         do {
             try managedContext.save()
@@ -116,18 +115,18 @@ class CoreDataOperations {
         
     }
     
-    func updateResetTime(newResetTimeInSeconds: TimeInterval) -> DatabaseQueryResult {
-        
-        // Fetching the App Delegate object
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return .Failure }
-        
-        // Fetching the managed context object
-        let managedContext = appDelegate.persistentContainer.viewContext
-        
-        
-        return .Success
-        
-    }
+//    func updateResetTime(newResetTimeInSeconds: TimeInterval) -> DatabaseQueryResult {
+//
+//        // Fetching the App Delegate object
+//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return .Failure }
+//
+//        // Fetching the managed context object
+//        let managedContext = appDelegate.persistentContainer.viewContext
+//
+//
+//        return .Success
+//
+//    }
     
     func saveCustomResetTime(_ customTime: TimeDomain) -> DatabaseQueryResult {
         
