@@ -10,6 +10,8 @@ import UIKit
 
 class ChecklistSettingsViewController: UIViewController {
     
+    /// Added a demo comment here to solve merge conflict
+    
     // MARK: - Outlet Variables
     @IBOutlet weak var settingsTableView: UITableView!
 
