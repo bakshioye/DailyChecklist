@@ -172,14 +172,12 @@ extension ChecklistSettingsViewController: TransferData {
             cell.settingValue.text = convertTimeDomainToString(newResetTime)
         }
         
-        // FIXME: - Call a method to update the reset time inside Core Data
+        // Updating the Core Data with the updated reset time
+        CoreDataOperations.shared.updateResetTime(newResetTime, checklistID: checklistUUID!)
+        
         
         // Asking the user if they want to reset the list NOW or if they want to wait for the reset time STARTING NOW ONWARDS WITHOUT RESETTING THE LIST AT THIS VERY MOMENT
-        createAlertForResetNow(newResetTimeInSeconds: newResetTime)
-        
-        
-        
-        
+//        createAlertForResetNow(newResetTimeInSeconds: newResetTime)
         
     }
    

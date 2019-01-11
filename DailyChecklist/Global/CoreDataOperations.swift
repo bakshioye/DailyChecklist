@@ -145,6 +145,91 @@ class CoreDataOperations {
 
     }
     
+    // FIXME: - In case the user wants to remove the reset time from the checklist, we need to handle it here by passing nil as the first parameter
+    
+    /**
+        Update the reset time for the checklist
+     
+        - Parameter time: New reset time
+        - Parameter checklistID: UUID for the checklist to be updated
+     
+        - Returns: Status for updation of the reset time for checklist
+    */
+    func updateResetTime(_ time: TimeDomain, checklistID: UUID) -> DatabaseQueryResult {
+        
+        // Fetching the App Delegate object
+        guard let appDelegate = UIApplication.shared.delegate  as? AppDelegate else {
+            return .Failure
+        }
+        
+        // Fetching the managed context object
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        // Creating the fetch request object
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: CoreDataEntities.ResetTime.rawValue)
+        
+        // Fetching only a particular row from Core Data that has that checklist ID
+        fetchRequest.predicate = NSPredicate(format: "checklistID == %@", checklistID as CVarArg)
+        
+        /// Array that stores reset times fetched from Core Data
+        var resetTimesFromCoreData = [NSManagedObject]()
+        
+        do {
+            resetTimesFromCoreData = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("------------ ERROR IN FETCHING RESET TIMES FROM CORE DATA ----------- \(error)")
+            fatalError()
+        }
+        
+        // Checking if there is already a reset time for the checklist and if not, we create a new reset time for the checklist
+        guard !resetTimesFromCoreData.isEmpty else {
+            
+            // Creating the entity object which contains the table
+            let entity = NSEntityDescription.entity(forEntityName: CoreDataEntities.ResetTime.rawValue, in: managedContext)!
+            
+            // Creating the managed object to insert the values into
+            let managedObject = NSManagedObject(entity: entity, insertInto: managedContext)
+            
+            // Setting values for different attributes
+            managedObject.setValue(checklistID, forKey: "checklistID")
+            managedObject.setValue(time.minute, forKey: "minute")
+            managedObject.setValue(time.hour, forKey: "hour")
+            managedObject.setValue(time.day, forKey: "day")
+            managedObject.setValue(time.week, forKey: "week")
+            managedObject.setValue(time.month, forKey: "month")
+            
+            do {
+                try managedContext.save()
+            } catch let error as NSError {
+                print("---------- ERROR IN CREATING NEW RESET TIME FOR CHECKLIST --------- \\n \(error)")
+                fatalError()
+            }
+            
+            return .Success
+        }
+        
+        /// If we reach here, we have a reset time set for the checklist and so we update the existing
+        
+        // Since there will only be one present in the array(because we used predicate), it will always be the first
+        let resetTimeObject = resetTimesFromCoreData[0]
+        
+        resetTimeObject.setValue(time.minute, forKey: "minute")
+        resetTimeObject.setValue(time.hour, forKey: "hour")
+        resetTimeObject.setValue(time.day, forKey: "day")
+        resetTimeObject.setValue(time.week, forKey: "week")
+        resetTimeObject.setValue(time.month, forKey: "month")
+        
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("------------- ERROR IN UPDATING THE RESET TIME FOR THE CHECKLIST --------------- \\n \(error)")
+            fatalError()
+        }
+        
+        return .Success
+        
+    }
+    
     
     func saveCustomResetTime(_ customTime: TimeDomain) -> DatabaseQueryResult {
         
