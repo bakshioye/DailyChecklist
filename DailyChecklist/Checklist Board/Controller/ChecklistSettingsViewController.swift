@@ -14,7 +14,7 @@ class ChecklistSettingsViewController: UIViewController {
     @IBOutlet weak var settingsTableView: UITableView!
 
     // MARK: - Variables to be used
-    var resetTime:TimeInterval?
+    var checklistUUID: UUID?
     
     var settings = [ChecklistSetting]()
     
@@ -49,17 +49,34 @@ extension ChecklistSettingsViewController {
     
     fileprivate func parseResetTimeToString() -> String {
         
-        if let resetTimeUnwrapped = resetTime {
-            /// If the user has set some value for resetTime , handle it here
-            print("Date fetched : \(resetTimeUnwrapped)")
-            return "Some Date"
+        // Checking if there exists a Reset time for the checklist
+        guard let resetTime = CoreDataOperations.shared.fetchResetTime(checklistID: checklistUUID!) else {
+            return "Not Set"
         }
         
-        return "Not Set"
+        var stringToBeReturned = ""
         
+        // Checking if there exists a reset time and modifying the string accordingly
+        if resetTime.month != 0 {
+            stringToBeReturned += "\(resetTime.month) month "
+        }
+        if resetTime.week != 0 {
+            stringToBeReturned += "\(resetTime.week) week "
+        }
+        if resetTime.day != 0 {
+            stringToBeReturned += "\(resetTime.day) day "
+        }
+        if resetTime.hour != 0 {
+            stringToBeReturned += "\(resetTime.hour) hour "
+        }
+        if resetTime.minute != 0 {
+            stringToBeReturned += "\(resetTime.minute) minute "
+        }
+        
+        return stringToBeReturned
     }
     
-    fileprivate func createAlertForResetNow(newResetTimeInSeconds: TimeInterval) {
+    fileprivate func createAlertForResetNow(newResetTimeInSeconds: TimeDomain) {
         
         let alert = UIAlertController(title: "Reset checklist now ?", message: "Do you want to reset the checklist now ? If you select 'No', checklist will be reseted after \(newResetTimeInSeconds) ", preferredStyle: .alert)
         
@@ -78,12 +95,6 @@ extension ChecklistSettingsViewController {
         self.present(alert, animated: true, completion: nil)
         
     }
-    
-//    fileprivate func convertSecondsToDateFormat(inSeconds: TimeInterval) -> String {
-//        
-//        
-//        
-//    }
     
 }
 
@@ -154,16 +165,21 @@ extension ChecklistSettingsViewController: UITableViewDelegate {
 // MARK: -  Transfer Data Protocol Conformance
 extension ChecklistSettingsViewController: TransferData {
     
-    func updateResetTime(newResetTime: TimeInterval) {
+    func updateResetTime(newResetTime: TimeDomain) {
         
-        print("-------- updateResetTime() called ----------")
+        // Since we know that the first setting in the list(or say tableView) is always Reset time so we directly fetch that cell and update its label accordingly
+        if let cell = settingsTableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? ChecklistSettingsCell {
+            cell.settingValue.text = convertTimeDomainToString(newResetTime)
+        }
         
-        // Asking the user if they want to reset the list now or of they want to wait for the reset time FROM NOW ON WITHOUT RESETTING THE LIST AT THIS MOMENT
+        // FIXME: - Call a method to update the reset time inside Core Data
+        
+        // Asking the user if they want to reset the list NOW or if they want to wait for the reset time STARTING NOW ONWARDS WITHOUT RESETTING THE LIST AT THIS VERY MOMENT
         createAlertForResetNow(newResetTimeInSeconds: newResetTime)
         
         
         
-        // Call a method to update the reset time inside Core Data
+        
         
     }
    

@@ -115,18 +115,36 @@ class CoreDataOperations {
         
     }
     
-//    func updateResetTime(newResetTimeInSeconds: TimeInterval) -> DatabaseQueryResult {
-//
-//        // Fetching the App Delegate object
-//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return .Failure }
-//
-//        // Fetching the managed context object
-//        let managedContext = appDelegate.persistentContainer.viewContext
-//
-//
-//        return .Success
-//
-//    }
+    func fetchResetTime(checklistID: UUID) -> TimeDomain? {
+        
+        // Fetching the App Delegate Object
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return nil }
+        
+        // Fetching the managed context Object
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        // Creating a fetch request
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: CoreDataEntities.ResetTime.rawValue)
+
+        // Setting the predicate for the request for fetching only the row which has the UUID
+        fetchRequest.predicate = NSPredicate(format: "checklistID == %@", checklistID as CVarArg)
+        
+        var resetTimeFetchedFromCoreData = [NSManagedObject]()
+        
+        do {
+            resetTimeFetchedFromCoreData = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("---------- ERROR IN FETCHING RESET TIME FROM CORE DATA ------------ : \(error)")
+            fatalError()
+        }
+        
+        //        print(resetTimeFetchedFromCoreData)
+        
+        // If we have an empty array, then it signifies that there is no reset time set for that particular Checklist
+        return resetTimeFetchedFromCoreData.count == 0 ? nil : convertResetTimeToTimeDomain(timeFromCoreData: resetTimeFetchedFromCoreData[0])
+
+    }
+    
     
     func saveCustomResetTime(_ customTime: TimeDomain) -> DatabaseQueryResult {
         
@@ -224,13 +242,18 @@ class CoreDataOperations {
         return .Success
     }
     
-    
-    
 }
 
 // MARK: - Supplementary functions
 extension CoreDataOperations {
     
+    /**
+        Here we convert **List of items** into a string in which items and its completion status will be seperated by some characters
+     
+        - Parameter items: An array of List Item of a checklist
+     
+        - Returns: A string made up of List Items and its completion status combined as one and seperated by some identifiers
+    */
     fileprivate func convertItemsToString(items: [ListItem]) -> String {
         
         /**
@@ -246,6 +269,23 @@ extension CoreDataOperations {
         }
         
         return arrayOfItems.joined(separator: "\\i")
+        
+    }
+    
+    /**
+        Here we convert the **Reset time** fetched from the Core Data which is in form of *NSManagedObject* into a **TimeDomain** type value
+     
+        - Parameter resetTime: Complete NSManaged object fetched from Core Data
+     
+        - Returns: A *TimeDomain* object which is the converted form of resetTime fetched from Core Data
+    */
+    fileprivate func convertResetTimeToTimeDomain(timeFromCoreData resetTime: NSManagedObject) -> TimeDomain {
+        
+        return (resetTime.value(forKey: "minute") as! Int,
+                resetTime.value(forKey: "hour") as! Int,
+                resetTime.value(forKey: "day") as! Int,
+                resetTime.value(forKey: "week") as! Int,
+                resetTime.value(forKey: "month") as! Int)
         
     }
     

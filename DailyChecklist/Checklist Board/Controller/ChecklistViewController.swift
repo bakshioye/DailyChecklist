@@ -65,7 +65,7 @@ class ChecklistViewController: UIViewController {
         if segue.identifier == "settings" {
             
             if let checklistSettingsVC = segue.destination as? ChecklistSettingsViewController {
-                //checklistSettingsVC.resetTime = checklist.resetTime
+                checklistSettingsVC.checklistUUID = (selectedChecklist!.value(forKey: "checklistID") as! UUID)
             }
         }
         

@@ -118,3 +118,71 @@ extension UIViewController {
     
 }
 
+// MARK: - This contains all the functions that are common to all the View Controllers
+extension UIViewController {
+    
+    /**
+        Converts the *Time Domain* provided to a *String* that can be used to display on cells and other places
+     
+        - Parameter timeInDomain: Time in *TimeDomain*
+     
+        - Returns: A string representation of *TimeDomain*
+     
+        - Note: It converts *(1,2,3,4,5)* a.k.a *TimeDomain* to *5 months 4 weeks 3 days 2 hours 1 minute* a.k.a *String Representation*
+    */
+    func convertTimeDomainToString(_ timeInDomain:TimeDomain) -> String {
+        
+        let monthsString = timeInDomain.month != 0 ? "\(timeInDomain.month) months " : ""
+        
+        let weeksString = timeInDomain.week != 0 ? "\(timeInDomain.week) weeks " : ""
+        
+        let daysString = timeInDomain.day != 0 ? "\(timeInDomain.day) days " : ""
+        
+        let hoursString = timeInDomain.hour != 0 ? "\(timeInDomain.hour) hours " : ""
+        
+        let minuteString = timeInDomain.minute != 0 ? "\(timeInDomain.minute) minutes " : ""
+        
+        return monthsString+weeksString+daysString+hoursString+minuteString
+        
+    }
+    
+    /**
+     Converts the *String* provided to a *TimeDomain* that can be passed around
+     
+     - Parameter aString: Time in *String*
+     
+     - Returns: A *TimeDomain* representation of time in *String*
+     
+     - Note: It converts *5 months 4 weeks 3 days 2 hours 1 minute* a.k.a *String Representation* to *(1,2,3,4,5)* a.k.a *TimeDomain*
+     
+     - Requires: The *time unit* inside the string should be plural and not singular like **months** insted of **month**
+     */
+    func convertStringToTimeDomain(_ aString: String) -> TimeDomain {
+        
+        // Splitting the string based on space
+        let arrayOfTimeComponents = aString.components(separatedBy: " ")
+        
+        // Since each even positon(start from 0) of the array will have values for time domain (like 1,3) and each odd postion will have the unit of the time domain (day,minute)
+        
+        /**
+            This will hold the time domains as in the form of dictionary like "months:4"
+         
+            - Note: We have used string as the *key* as we will only have one *time unit* like months in our string but the values can be repetitive
+        */
+        var timeDomainDict = Dictionary<String,Int>()
+        
+        for currentIndex in stride(from: 0, to: arrayOfTimeComponents.count, by: 2) {
+            timeDomainDict[arrayOfTimeComponents[currentIndex+1]] = Int(arrayOfTimeComponents[currentIndex])
+        }
+        
+        // Making the TimeDomain Object out of the dictionary
+        return (timeDomainDict["minutes"] ?? 0,
+                timeDomainDict["hours"] ?? 0,
+                timeDomainDict["days"] ?? 0,
+                timeDomainDict["weeks"] ?? 0,
+                timeDomainDict["hours"] ?? 0)
+        
+    }
+    
+}
+

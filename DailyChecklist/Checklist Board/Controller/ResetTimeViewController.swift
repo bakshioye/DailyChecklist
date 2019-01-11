@@ -139,7 +139,7 @@ extension ResetTimeViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
-        // We are checking if the user tapped on the label named "Custom"
+        // User tapped "Custom"
         if let cell = tableView.cellForRow(at: indexPath) as? ResetTimeTableViewCell , cell.timeLabel.text == "Custom" {
             
             let customResetTimeVCObject = self.storyboard?.instantiateViewController(withIdentifier: CHECKLIST_CUSTOM_RESET_TIME_VC_IDENTIFIER) as! CustomResetTimeViewController
@@ -151,9 +151,12 @@ extension ResetTimeViewController {
             return
         }
         
+        // User tapped on pre defined time
         let selectedTime = resetTimesArray[indexPath.section].values[indexPath.row]
         
-        transferDataDelegate?.updateResetTime(newResetTime: convertStringToSeconds(aString: selectedTime))
+        let selectedTimeInTimeDomain = convertStringToTimeDomain(selectedTime)
+        
+        transferDataDelegate?.updateResetTime(newResetTime: selectedTimeInTimeDomain)
         
         navigationController?.popViewController(animated: true)
         
@@ -183,79 +186,8 @@ extension ResetTimeViewController {
         tableView.contentInset = insets
         
     }
+
     
-    // Return number of seconds which will be converted to minute,hour,day,week etc
-    fileprivate func convertStringToSeconds(aString: String) -> TimeInterval {
-        
-        let splittedArray = aString.components(separatedBy: " ")
-        
-        var numberOfSecondsToBeReturned: TimeInterval = 0.0
-        
-        /// I am assuming the string will either be like 1 hour/10 minutes/3 weeks OR 1 hour 20 minutes/ 2 weeks 3 days , that is, first number, then string ,then number , then string and soooo on
-        
-//        // We are checking if the user has more than one time constraint i.e. 1 hour 30 minutes, 3 week 2 days
-//        var timeHasMoreThanOneComponent = splittedArray.count > 2
-        
-        // Creating an array of tuple which has 2 elements , time unit(hour,minute) and its value(2,12)
-        var collectionOfTimes = [(type:String,value:Int)]()
-        
-        // For creating collection of tuples which contain time unit and itr value
-        for currentIndex in 0...splittedArray.count - 1 {
-            
-            // When we have odd, we can subtract 1 from it and can combine with the previous to create a tuple
-            guard !currentIndex.isEven else { continue }
-        
-            collectionOfTimes.append((type: splittedArray[currentIndex], value: Int(splittedArray[currentIndex-1])!))
-            
-        }
-        
-        // Taking each element in the tuple and converting it to seconds and adding it to the final seconds
-        for currentTime in collectionOfTimes {
-            
-            switch currentTime.type {
-                
-            case "minute","minutes":
-               numberOfSecondsToBeReturned += Double(currentTime.value * 60)
-                
-            case "hour","hours":
-               numberOfSecondsToBeReturned += Double(currentTime.value * 3600)
-                
-            case "day","days":
-                numberOfSecondsToBeReturned += Double(currentTime.value * 86400)
-                
-            case "week","weeks":
-                numberOfSecondsToBeReturned += Double(currentTime.value * 604800)
-            
-            // FIXME: - There are different values for months to seconds on the internet like 2629800 / 2629746
-            case "month","months":
-                numberOfSecondsToBeReturned += Double(currentTime.value * 2592000)
-                
-            default:
-                 break
-                
-            }
-            
-        }
-        
-        return numberOfSecondsToBeReturned
-        
-    }
-    
-    fileprivate func convertTimeDomainToString(_ timeInDomain:TimeDomain) -> String {
-        
-        let monthsString = timeInDomain.month != 0 ? "\(timeInDomain.month) months " : ""
-        
-        let weeksString = timeInDomain.week != 0 ? "\(timeInDomain.week) weeks " : ""
-        
-        let daysString = timeInDomain.day != 0 ? "\(timeInDomain.day) days " : ""
-        
-        let hoursString = timeInDomain.hour != 0 ? "\(timeInDomain.hour) hours " : ""
-        
-        let minuteString = timeInDomain.minute != 0 ? "\(timeInDomain.minute) minutes " : ""
-        
-        return monthsString+weeksString+daysString+hoursString+minuteString
-        
-    }
 
 }
 

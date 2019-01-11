@@ -19,3 +19,5 @@ public enum CoreDataEntities:String {
     case LastResetAtTime
     case ResetTime
 }
+
+
