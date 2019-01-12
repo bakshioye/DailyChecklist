@@ -160,7 +160,15 @@ extension UIViewController {
     func convertStringToTimeDomain(_ aString: String) -> TimeDomain {
         
         // Splitting the string based on space
-        let arrayOfTimeComponents = aString.components(separatedBy: " ")
+        var arrayOfTimeComponents = aString.components(separatedBy: " ")
+        
+        // Removing the trailing and leading spaces from the string
+        if arrayOfTimeComponents.last == "" {
+            arrayOfTimeComponents.removeLast()
+        }
+        if arrayOfTimeComponents.first == "" {
+            arrayOfTimeComponents.removeFirst()
+        }
         
         // Since each even positon(start from 0) of the array will have values for time domain (like 1,3) and each odd postion will have the unit of the time domain (day,minute)
         
@@ -176,11 +184,12 @@ extension UIViewController {
         }
         
         // Making the TimeDomain Object out of the dictionary
-        return (timeDomainDict["minutes"] ?? 0,
-                timeDomainDict["hours"] ?? 0,
-                timeDomainDict["days"] ?? 0,
-                timeDomainDict["weeks"] ?? 0,
-                timeDomainDict["hours"] ?? 0)
+        // If any of the time unit is nil, we return 0 in place of it
+        return (timeDomainDict["minutes"] ?? timeDomainDict["minute"] ?? 0 ,
+                timeDomainDict["hours"] ?? timeDomainDict["hour"] ?? 0,
+                timeDomainDict["days"] ?? timeDomainDict["day"] ?? 0,
+                timeDomainDict["weeks"] ?? timeDomainDict["week"] ?? 0,
+                timeDomainDict["months"] ?? timeDomainDict["month"] ?? 0)
         
     }
     

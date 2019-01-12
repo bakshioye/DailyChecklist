@@ -11,11 +11,15 @@ import UIKit
 
 class CoreDataOperations {
     
+    // MARK: - Class Variables
+    
     //Creating singleton object
     static let shared = CoreDataOperations()
     
     // Creating private initialiser so that the user cannot access the initialiser of this class and can only use the shared instance of this class
     private init() { }
+    
+    // MARK: - Checklist Functions
     
     func createNewChecklist(checklist:Checklist) -> DatabaseQueryResult {
         
@@ -86,7 +90,7 @@ class CoreDataOperations {
     
     func updateChecklist(oldChecklist: NSManagedObject, newChecklist: Checklist) -> DatabaseQueryResult {
         
-        // FIXME: - Why is there NO ENTITY used inside this function
+        // FIXME: Why is there NO ENTITY used inside this function
         
         // Fetching the App Delegate object
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return .Failure }
@@ -114,6 +118,8 @@ class CoreDataOperations {
         return .Failure
         
     }
+    
+    // MARK: - Reset Time Functions
     
     func fetchResetTime(checklistID: UUID) -> TimeDomain? {
         
@@ -145,7 +151,7 @@ class CoreDataOperations {
 
     }
     
-    // FIXME: - In case the user wants to remove the reset time from the checklist, we need to handle it here by passing nil as the first parameter
+    // FIXME: In case the user wants to remove the reset time from the checklist, we need to handle it here by passing nil as the first parameter
     
     /**
         Update the reset time for the checklist
@@ -177,7 +183,7 @@ class CoreDataOperations {
         do {
             resetTimesFromCoreData = try managedContext.fetch(fetchRequest)
         } catch let error as NSError {
-            print("------------ ERROR IN FETCHING RESET TIMES FROM CORE DATA ----------- \(error)")
+            print("------------ ERROR IN FETCHING RESET TIMES FROM CORE DATA ----------- \\n \(error)")
             fatalError()
         }
         
@@ -230,6 +236,7 @@ class CoreDataOperations {
         
     }
     
+    // MARK: - Custom Reset Time Functions
     
     func saveCustomResetTime(_ customTime: TimeDomain) -> DatabaseQueryResult {
         
@@ -300,6 +307,8 @@ class CoreDataOperations {
         return customResetTimes
         
     }
+    
+    // MARK: - Delete all Checklist Functions
     
     /// For testing purpose only
     func deleteAllChecklists() -> DatabaseQueryResult {

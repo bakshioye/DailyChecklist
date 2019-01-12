@@ -27,14 +27,18 @@ class ResetTimeViewController: UITableViewController {
     // TODO: - If there is already a reset time selected, then mark it with a tick
     
     // MARK: - Local variables to be used
-    let resetTimesArray:[ResetTimes] = [ResetTimes(category: .Minute, values: ["10 minutes","20 minutes","30 minutes"]),ResetTimes(category: .Hour, values: ["1 hour","2 hours","3 hours","5 hours","10 hours","12 hours","15 hours"]),ResetTimes(category: .Day, values: ["1 day","2 days"]),ResetTimes(category: .Week, values: ["1 week","2 weeks","3 weeks"]),ResetTimes(category: .Month, values: ["1 month","2 months"])]
+    var resetTimesArray:[ResetTimes] = [ResetTimes(category: .Minute, values: ["10 minutes","20 minutes","30 minutes"]),
+                                        ResetTimes(category: .Hour, values: ["1 hour","2 hours","3 hours","5 hours","10 hours","12 hours","15 hours"]),
+                                        ResetTimes(category: .Day, values: ["1 day","2 days"]),
+                                        ResetTimes(category: .Week, values: ["1 week","2 weeks","3 weeks"]),
+                                        ResetTimes(category: .Month, values: ["1 month","2 months"]) ]
     
     var resetTimeSelected:TimeInterval?
     
     var transferDataDelegate:TransferData?
     
-    // Used to store "Custom time" from Core Data made by user in the past
-    var customResetTimes = [(TimeDomain)]()
+    /// Used to store "Custom time" from Core Data made by user in the past
+    var customResetTimes = [TimeDomain]()
     
     // MARK: - Overriding inbuilt functions
     override func viewDidLoad() {
@@ -151,8 +155,8 @@ extension ResetTimeViewController {
             return
         }
         
-        // User tapped on pre defined time
-        let selectedTime = resetTimesArray[indexPath.section].values[indexPath.row]
+        // User tapped on a custom time that they defined OR User tapped on pre defined time
+        let selectedTime = indexPath.section >= resetTimesArray.count ? convertTimeDomainToString(customResetTimes[indexPath.row]) : resetTimesArray[indexPath.section].values[indexPath.row]
         
         let selectedTimeInTimeDomain = convertStringToTimeDomain(selectedTime)
         
