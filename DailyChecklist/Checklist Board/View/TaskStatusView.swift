@@ -27,7 +27,7 @@ fileprivate enum TaskStatus: String {
             
             outerCircleShapeLayer.fillColor = UIColor.clear.cgColor
             
-            outerCircleShapeLayer.strokeColor = taskCompleted ? UIColor(hexString: "#d4e157").cgColor : UIColor(hexString: "#757575").cgColor
+            outerCircleShapeLayer.strokeColor = taskCompleted ? UIColor(hexString: "#d4e157").cgColor : UIColor(hexString: "#e0e0e0").cgColor
             
             outerCircleShapeLayer.lineWidth = 3.0
             
@@ -39,7 +39,7 @@ fileprivate enum TaskStatus: String {
             let innerCircleShapeLayer = CAShapeLayer()
             innerCircleShapeLayer.path = innerCirclePath.cgPath
             
-            innerCircleShapeLayer.fillColor = taskCompleted ? UIColor(hexString: "#d4e157").cgColor : UIColor(hexString: "#757575").cgColor
+            innerCircleShapeLayer.fillColor = taskCompleted ? UIColor(hexString: "#d4e157").cgColor : UIColor(hexString: "#e0e0e0").cgColor
 
             layer.addSublayer(innerCircleShapeLayer)
             

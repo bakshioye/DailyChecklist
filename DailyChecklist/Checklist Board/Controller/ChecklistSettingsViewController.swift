@@ -60,19 +60,19 @@ extension ChecklistSettingsViewController {
         
         // Checking if there exists a reset time and modifying the string accordingly
         if resetTime.month != 0 {
-            stringToBeReturned += "\(resetTime.month) month "
+            stringToBeReturned += "\(resetTime.month) \(resetTime.month == 1 ? "month" : "months" ) "
         }
         if resetTime.week != 0 {
-            stringToBeReturned += "\(resetTime.week) week "
+            stringToBeReturned += "\(resetTime.week) \(resetTime.week == 1 ? "week" : "weeks" ) "
         }
         if resetTime.day != 0 {
-            stringToBeReturned += "\(resetTime.day) day "
+            stringToBeReturned += "\(resetTime.day) \(resetTime.day == 1 ? "day" : "days" ) "
         }
         if resetTime.hour != 0 {
-            stringToBeReturned += "\(resetTime.hour) hour "
+            stringToBeReturned += "\(resetTime.hour) \(resetTime.hour == 1 ? "hour" : "hours" ) "
         }
         if resetTime.minute != 0 {
-            stringToBeReturned += "\(resetTime.minute) minute "
+            stringToBeReturned += "\(resetTime.minute) \(resetTime.minute == 1 ? "minute" : "minutes" ) "
         }
         
         return stringToBeReturned
@@ -155,6 +155,7 @@ extension ChecklistSettingsViewController: UITableViewDelegate {
             let resetTimeVCObject = self.storyboard?.instantiateViewController(withIdentifier: CHECKLIST_SETTINGS_RESET_TIME_VC_IDENTIFIER) as! ResetTimeViewController
             
             resetTimeVCObject.transferDataDelegate = self
+            resetTimeVCObject.checklistUUID = checklistUUID!
             
             self.navigationController?.pushViewController(resetTimeVCObject, animated: true)
             
@@ -180,6 +181,14 @@ extension ChecklistSettingsViewController: TransferData {
         
         // Asking the user if they want to reset the list NOW or if they want to wait for the reset time STARTING NOW ONWARDS WITHOUT RESETTING THE LIST AT THIS VERY MOMENT
 //        createAlertForResetNow(newResetTimeInSeconds: newResetTime)
+        
+    }
+    
+    func removeResetTime() {
+        
+        if let cell = settingsTableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? ChecklistSettingsCell {
+            cell.settingValue.text = "Not Set"
+        }
         
     }
    

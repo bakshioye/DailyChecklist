@@ -121,6 +121,13 @@ class CoreDataOperations {
     
     // MARK: - Reset Time Functions
     
+    /**
+        Returns the reset time for a checklist *if it exists*
+     
+        - Parameter checklistID: UUID for the checklist
+     
+        - Returns: Reset time in *TimeDomain* if it exists, nil otherwise
+    */
     func fetchResetTime(checklistID: UUID) -> TimeDomain? {
         
         // Fetching the App Delegate Object
@@ -229,6 +236,53 @@ class CoreDataOperations {
             try managedContext.save()
         } catch let error as NSError {
             print("------------- ERROR IN UPDATING THE RESET TIME FOR THE CHECKLIST --------------- \\n \(error)")
+            fatalError()
+        }
+        
+        return .Success
+        
+    }
+    
+    /**
+        This method will remove Reset time from a particuar checklist
+     
+        - Parameter checklistUUID: UUID for the checklist to be removed
+    
+        - Returns: Result for querying Core Data and whether it was success or failure
+    */
+    func removeResetTime(checklistUUID: UUID) -> DatabaseQueryResult {
+        
+        // Fetching App Delegate object
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return .Failure
+        }
+        
+        // Creating a Managed Context object
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        // Creating fetch request object
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: CoreDataEntities.ResetTime.rawValue)
+        
+        // Setting the predicate to filter out the particular checklist
+        fetchRequest.predicate = NSPredicate(format: "checklistID == %@", checklistUUID as CVarArg)
+        
+        /// This will store Reset times that are fetched from Core Data
+        var resetTimesFromCoreData = [NSManagedObject]()
+        
+        do {
+            resetTimesFromCoreData = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("----------- ERROR IN FETCHING RESET TIMES FROM CORE DATA \\n \(error)")
+            fatalError()
+        }
+        
+        // Deleting reset time for that particular checklist
+        managedContext.delete(resetTimesFromCoreData[0])
+        
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("--------- ERROR IN DELETING RESET TIME FROM CORE DATA ---------- \\n \(error)")
             fatalError()
         }
         

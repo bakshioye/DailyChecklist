@@ -89,11 +89,21 @@ extension HomeViewController: UICollectionViewDataSource {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HOME_CHECKLIST_CELL_ID, for: indexPath) as! HomeCVCell
         
-        // Fetching the current checklist from the array
+        // Fetching the current checklist from the array as NSManagedObject
         let currentChecklist = checklistsArray[indexPath.row]
         
         // Setting the name of the checklist to the label
         cell.someTitleLable.text = currentChecklist.value(forKey: "name") as? String
+        
+        // Parsing the items which are in string format and fetching the count of items that are completed out of total
+        let collectionOfItemsCount = fetchNumberOfCompletedItems(currentChecklist.value(forKey: "items") as! String)
+        
+        // Assigning the values to create that progress circle
+        cell.tasksCompleted = CGFloat(collectionOfItemsCount.completed)
+        cell.totalTasks = CGFloat(collectionOfItemsCount.total)
+        
+        // Calling it from here as if we did it from awakeFromNib(), the class variables were not yet initialised
+        cell.setupChecklistProgress()
         
         return cell
         
@@ -123,6 +133,38 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
             return CGSize(width: collectionView.viewWidth/2 - 10 , height: collectionView.viewHeight/3 - 10)
+    }
+    
+}
+
+// MARK: - Helper Functions
+extension HomeViewController {
+    
+    /**
+        Extract the number of items that have their status completed and total tasks as well
+     
+        - Parameter itemsAsString: Items of a checklist in the form of a string
+     
+        - Returns: A tuple which contains completed items and total items
+    */
+    fileprivate func fetchNumberOfCompletedItems(_ itemsAsString: String) -> (completed: Int, total: Int ) {
+        
+        /// This will contain items and their completion status with \b as seperator between them
+        let arrayOfItems = itemsAsString.components(separatedBy: "\\i")
+        
+        /// This will create a dictionary by splitting the item and its completion status
+        var dictionaryOfItemsAndItsStatus = Dictionary<String,Bool>()
+        
+        for currentItem in arrayOfItems {
+            let combinationOfItemsAndValues = currentItem.components(separatedBy: "\\b")
+            
+            dictionaryOfItemsAndItsStatus[combinationOfItemsAndValues[0]] = combinationOfItemsAndValues[1] == "true"
+        }
+        
+        let itemsWithStatusComleted = dictionaryOfItemsAndItsStatus.filter( { $1 == true } )
+        
+        return (itemsWithStatusComleted.count, dictionaryOfItemsAndItsStatus.count)
+        
     }
     
 }

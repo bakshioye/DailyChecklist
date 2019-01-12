@@ -37,6 +37,8 @@ class ResetTimeViewController: UITableViewController {
     
     var transferDataDelegate:TransferData?
     
+    var checklistUUID: UUID?
+    
     /// Used to store "Custom time" from Core Data made by user in the past
     var customResetTimes = [TimeDomain]()
     
@@ -46,6 +48,7 @@ class ResetTimeViewController: UITableViewController {
 
         customizeTableView()
         
+        addNavigationBarButtons()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -188,6 +191,31 @@ extension ResetTimeViewController {
         // Add some space at the end of table view
         let insets = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
         tableView.contentInset = insets
+        
+    }
+    
+    fileprivate func addNavigationBarButtons() {
+        
+        // Adding the Remove reset time button
+        let removeResetTimeButton = UIBarButtonItem(title: "Remove", style: .done, target: self, action: #selector(actionForRemoveResetTime(_:)))
+        
+        removeResetTimeButton.tintColor = UIColor.red
+        
+        navigationItem.rightBarButtonItem = removeResetTimeButton
+        
+    }
+    
+    @objc func actionForRemoveResetTime(_ button: UIBarButtonItem) {
+        
+        if CoreDataOperations.shared.removeResetTime(checklistUUID: checklistUUID!) == .Failure {
+            presentErrorAlert(title: "Error -- Reset time could not be removed", message: "The reset time linked to the checkist could not be removed at the moment, Please try again")
+        }
+        
+        // Setting the Reset Time label to Not Set
+        transferDataDelegate?.removeResetTime()
+        
+        // Going back to the screen
+        navigationController?.popViewController(animated: true)
         
     }
 

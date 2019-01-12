@@ -49,12 +49,15 @@ extension UIView {
 
 extension NSObject {
     
-    enum AppStoryboards: String {
-        case Dashboard,ChecklistBoard
+    func findIndexOf<T: Equatable>(_ element: T,in arrayOfElements: [T]) -> Int {
         
-        var instance: UIStoryboard {
-            return UIStoryboard(name: self.rawValue, bundle: Bundle.main)
+        for (index,currentValue) in arrayOfElements.enumerated() {
+            if element == currentValue {
+                return index
+            }
         }
+        
+        return -1
         
     }
     

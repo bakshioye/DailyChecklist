@@ -26,13 +26,9 @@ class HomeCVCell: UICollectionViewCell {
         self.layer.cornerRadius = 5.0
         self.clipsToBounds = true
         
-        /// Just testing these values, replace them with values from Core Data
-        tasksCompleted = 5.0
-        totalTasks = 10.0
-        
         percentageLabel.textColor = UIColor(hexString: "#616161")
         
-        setupChecklistProgress()
+//        setupChecklistProgress()
         
 //        checklistProgressView.layer.borderWidth = 2.0
         
@@ -43,7 +39,18 @@ class HomeCVCell: UICollectionViewCell {
 // MARK: - Helper functions
 extension HomeCVCell {
     
-    fileprivate func setupChecklistProgress() {
+     func setupChecklistProgress() {
+        
+        /// Since we were reloading the data of collectionView in viewDidAppear of our View Controller, This method was being called everytime we were moving back and forth between checklistVC and HomeVC, and everytime , one layer kept adding on top of another
+        // So here we are checking if there are already some layers present inside our layer , and if so, we remove it before adding a new one . Since the first layer is implicitly added (CALayer), we leave that one and remove the other two that are being added(CAShapeLayer)
+        
+        if (layer.sublayers?.count)! > 1 {
+            for currentLayer in layer.sublayers! {
+                if currentLayer is CAShapeLayer {
+                    layer.sublayers?.remove(at: findIndexOf(currentLayer, in: layer.sublayers!))
+                }
+            }
+        }
         
         // Adding the circular Progress View
         let radius = checklistProgressView.viewWidth / 3
@@ -54,7 +61,7 @@ extension HomeCVCell {
         createCircularLayer(circularPath: circularPath, circularPathRadius: radius, strokeColor: UIColor(hexString: "#e0e0e0").cgColor, strokeEnd: 1)
         
         // Creating layer for foreground
-        createCircularLayer(circularPath: circularPath, circularPathRadius: radius, strokeColor: UIColor(hexString: "#66bb6a").cgColor, strokeEnd: tasksCompleted/totalTasks)
+        createCircularLayer(circularPath: circularPath, circularPathRadius: radius, strokeColor: UIColor(hexString: "#d4e157").cgColor, strokeEnd: tasksCompleted/totalTasks)
         
         // Setting text for the label
         let labelText = "\(Int(tasksCompleted))/\(Int(totalTasks))"

@@ -6,7 +6,16 @@
 //  Copyright © 2018 Shubham Bakshi. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+public enum AppStoryboards: String {
+    case Dashboard,ChecklistBoard
+    
+    var instance: UIStoryboard {
+        return UIStoryboard(name: self.rawValue, bundle: Bundle.main)
+    }
+    
+}
 
 public enum DatabaseQueryResult {
     case Success
