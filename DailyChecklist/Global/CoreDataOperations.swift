@@ -218,6 +218,13 @@ class CoreDataOperations {
                 fatalError()
             }
             
+            // FIXME:
+            /// we are creating the last reset time here for now but we need to ask the user whether they want to reset the checklist now or from the RESET TIME defined by them
+            
+            guard createLastResetAtTime(checklistID: checklistID) == .Success else {
+                return .Failure
+            }
+            
             return .Success
         }
         
@@ -365,6 +372,41 @@ class CoreDataOperations {
     // MARK: - Last Reset At Time Functions
     
     /**
+        Creates "Last Reset at Time" for a checklist
+     
+        - Parameter checklistID: ID for the checklist for which we have to add "Last Reset at Time"
+     
+        - Returns: Result for querying Core Data whether it was success or failure
+    */
+    func createLastResetAtTime(checklistID: UUID) -> DatabaseQueryResult {
+        
+        // Fetching the App Delegate object
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return .Failure }
+        
+        // Fetching the Managed context object
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        // Creating the entity object
+        let entity = NSEntityDescription.entity(forEntityName: CoreDataEntities.LastResetAtTime.rawValue, in: managedContext)!
+        
+        // Creating the Managed Object to insert into Core Data via context
+        let managedObject = NSManagedObject(entity: entity, insertInto: managedContext)
+        
+        // Setting the values for various attributes
+        managedObject.setValue(checklistID, forKey: "checklistID")
+        managedObject.setValue(Date(), forKey: "date")
+        
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("--------- ERROR IN INSERTING LAST RESET AT TIME INTO CORE DATA ---------- \\n \(error)")
+            fatalError()
+        }
+        
+        return .Success
+    }
+    
+    /**
         Fetches the last time at which the checklist was reseted at
      
         - Parameter checklistID: ID of the checklist
@@ -392,7 +434,7 @@ class CoreDataOperations {
             fatalError()
         }
         
-        return lastResetAtTimeFromCoreData.count == 0 ? nil : lastResetAtTimeFromCoreData[0].value(forKey: "date") as! Date
+        return lastResetAtTimeFromCoreData.count == 0 ? nil : (lastResetAtTimeFromCoreData[0].value(forKey: "date") as! Date)
     }
     
     /**
