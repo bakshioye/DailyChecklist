@@ -109,10 +109,10 @@ extension ChecklistViewController {
         }
         
         // Converting the List items recieved from database in form of String to ListItem format
-        let checklistItems = fetchListItemsFromString(listItemsInString: selectedChecklistUnwrapped.value(forKey: "items") as! String)
+        let checklistItems = convertStringToListItems(listItemsInString: selectedChecklistUnwrapped.value(forKey: "items") as! String)
         
         // Creating the instance of the checklist
-        checklist = Checklist(name: selectedChecklistUnwrapped.value(forKey: "name") as! String, creationDate: selectedChecklistUnwrapped.value(forKey: "creationDate") as! Date, items: checklistItems)
+        checklist = Checklist(checklistID: selectedChecklistUnwrapped.value(forKey: "checklistID") as! UUID,name: selectedChecklistUnwrapped.value(forKey: "name") as! String, creationDate: selectedChecklistUnwrapped.value(forKey: "creationDate") as! Date, items: checklistItems)
         
         // Setting the name of the checklist
         titleLabel.text = checklist.name
@@ -121,24 +121,7 @@ extension ChecklistViewController {
         checklist.items.sort( by: { $1.isCompleted } )
         
     }
-    
-    fileprivate func fetchListItemsFromString(listItemsInString: String) -> [ListItem] {
-        
-        var listItemArray = [ListItem]()
-        
-        let arrayOfItems = listItemsInString.components(separatedBy: "\\i")
-      
-        for currentItem in arrayOfItems {
-            
-            // 0 position will have name of the item and 1 positon will have the status of that item
-            let tempArray = currentItem.components(separatedBy: "\\b")
 
-            listItemArray.append(ListItem(name: tempArray[0], isCompleted: Bool(tempArray[1])!))
-        }
-        
-        return listItemArray
-    }
-    
     fileprivate func deleteAnyEmptyFields() {
         
         // To remove any empty text fields so that it does not gets added in the checklist

@@ -196,5 +196,54 @@ extension UIViewController {
         
     }
     
+    /**
+        Creates an array of list items for a checklist from the string provided
+     
+        - Parameter listItemsInString: List of items as *String*
+     
+        - Returns: An array of list of items as *ListItem*
+    */
+    func convertStringToListItems(listItemsInString: String) -> [ListItem] {
+        
+        var listItemArray = [ListItem]()
+        
+        let arrayOfItems = listItemsInString.components(separatedBy: "\\i")
+        
+        for currentItem in arrayOfItems {
+            
+            // 0 position will have name of the item and 1 positon will have the status of that item
+            let tempArray = currentItem.components(separatedBy: "\\b")
+            
+            listItemArray.append(ListItem(name: tempArray[0], isCompleted: Bool(tempArray[1])!))
+        }
+        
+        return listItemArray
+    }
+    
+    /**
+     Here we convert **List of items** into a string in which items and its completion status will be seperated by some characters
+     
+     - Parameter items: An array of List Item of a checklist
+     
+     - Returns: A string made up of List Items and its completion status combined as one and seperated by some identifiers
+     */
+    func convertListItemsToString(items: [ListItem]) -> String {
+        
+        /**
+         \\(Double back slash is used to avoid escape characters)
+         \i -> seperator between items
+         \b -> seperator between item name and it's boolean value
+         **/
+        
+        var arrayOfItems = Array<String>()
+        
+        for currentItem in items {
+            arrayOfItems.append("\(currentItem.name)\\b\(currentItem.isCompleted)")
+        }
+        
+        return arrayOfItems.joined(separator: "\\i")
+        
+    }
+
 }
 

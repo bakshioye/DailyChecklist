@@ -38,7 +38,7 @@ class CoreDataOperations {
         let list = NSManagedObject(entity: entity, insertInto: managedContext)
         
         // Converting Dictionary to String to store in Core Data
-        let itemsConvertedToString = convertItemsToString(items: checklist.items)
+        let itemsConvertedToString = convertListItemsToString(items: checklist.items)
         
         
         // Setting the values for various attributes
@@ -362,6 +362,132 @@ class CoreDataOperations {
         
     }
     
+    // MARK: - Last Reset At Time Functions
+    
+    /**
+        Fetches the last time at which the checklist was reseted at
+     
+        - Parameter checklistID: ID of the checklist
+     
+        - Returns: Last Reset at Time for the checklist in *Date*
+    */
+    func fetchLastResetAtTime(checklistID: UUID) -> Date? {
+        
+        // Fetching the App Delegate object
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return nil }
+        
+        // Fetching the managed context object
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        // Creating the Fetch request object
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: CoreDataEntities.LastResetAtTime.rawValue)
+        fetchRequest.predicate = NSPredicate(format: "checklistID == %@", checklistID as CVarArg)
+        
+        var lastResetAtTimeFromCoreData = [NSManagedObject]()
+        
+        do {
+            lastResetAtTimeFromCoreData = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("------------ ERROR IN FETCHING LAST RESET AT TIME FROM CORE DATA ------------------- \\n \(error)")
+            fatalError()
+        }
+        
+        return lastResetAtTimeFromCoreData.count == 0 ? nil : lastResetAtTimeFromCoreData[0].value(forKey: "date") as! Date
+    }
+    
+    /**
+        Updates the "Last Reset at time" for the checklist to a new updated value
+     
+        - Parameter checklistID: ID of the checklist whose Last Reset at Time is to be updated
+     
+        - Returns: Result for querying the database whether it was success or failure
+    */
+    func updateLastResetAtTime(checklistID: UUID) -> DatabaseQueryResult {
+        
+        // Fetching the App Delelgate object
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return .Failure }
+        
+        // Fetching the Managed Context object
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        // Creating a Fetch Request Object
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: CoreDataEntities.LastResetAtTime.rawValue)
+        fetchRequest.predicate = NSPredicate(format: "checklistID == %@", checklistID as CVarArg)
+        
+        var lastResetAtTimeFromCoreData = [NSManagedObject]()
+        
+        do {
+            lastResetAtTimeFromCoreData = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("----------- ERROR IN FETCHING LAST RESET AT TIME FROM CORE DATA ------------- \\n \(error)")
+            fatalError()
+        }
+        
+        // Updating the LastResetAtTime for the checklist
+        lastResetAtTimeFromCoreData[0].setValue(Date(), forKey: "date")
+        
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("------------- ERROR IN UPDATING LAST RESET AT TIME FOR CHECKLIST -------------- \\n \(error)")
+            fatalError()
+        }
+        
+        return .Success
+        
+    }
+    
+    /**
+        Resets the completion status of the all the checklist items and turns them to **not completed** or *false*
+     
+        - Parameter checklistID: ID of the checklist whose items are to be resetted
+     
+        - Returns: Result for querying the Core Data and whether it was a success or failure
+    */
+    func resetChecklistItemsCompletionStatus(checklistID: UUID) -> DatabaseQueryResult {
+        
+        // Fetching the App Delegate object
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return .Failure }
+        
+        // Fetching the Managed Object context
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        // Creating the fetch request object and providing a condition to narrow down the result
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: CoreDataEntities.List.rawValue)
+        fetchRequest.predicate = NSPredicate(format: "checklistID == %@", checklistID as CVarArg)
+        
+        var checklistFetchedFromCoreData = [NSManagedObject]()
+        
+        do {
+            checklistFetchedFromCoreData = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("---------------- ERROR IN FETCHING CHECKLIST FROM CORE DATA --------------- \\n \(error)")
+            fatalError()
+        }
+        
+        // Checking if there is some checklist with the ID that we provided
+        guard checklistFetchedFromCoreData.count != 0 else {
+            return .Failure
+        }
+        
+        // Fetching the checklist that we want
+        let selectedChecklist = checklistFetchedFromCoreData[0]
+        
+        // Resetting all the completion status of the items to not completed
+        selectedChecklist.setValue(resetChecklistItemsAsString(itemsAsString: selectedChecklist.value(forKey: "items") as! String), forKey: "items")
+        
+        do {
+            // Saving the checklist in context that we just updated
+            try managedContext.save()
+        } catch let error as NSError {
+            print("--------- ERROR IN RESETTING THE CHECKLIST ------------- \\n \(error)")
+            fatalError()
+        }
+        
+        return .Success
+        
+    }
+    
     // MARK: - Delete all Checklist Functions
     
     /// For testing purpose only
@@ -395,30 +521,6 @@ class CoreDataOperations {
 // MARK: - Supplementary functions
 extension CoreDataOperations {
     
-    /**
-        Here we convert **List of items** into a string in which items and its completion status will be seperated by some characters
-     
-        - Parameter items: An array of List Item of a checklist
-     
-        - Returns: A string made up of List Items and its completion status combined as one and seperated by some identifiers
-    */
-    fileprivate func convertItemsToString(items: [ListItem]) -> String {
-        
-        /**
-            \\(Double back slash is used to avoid escape characters)
-            \i -> seperator between items
-            \b -> seperator between item name and it's boolean value
-        **/
-        
-        var arrayOfItems = Array<String>()
-        
-        for currentItem in items {
-            arrayOfItems.append("\(currentItem.name)\\b\(currentItem.isCompleted)")
-        }
-        
-        return arrayOfItems.joined(separator: "\\i")
-        
-    }
     
     /**
         Here we convert the **Reset time** fetched from the Core Data which is in form of *NSManagedObject* into a **TimeDomain** type value
@@ -436,5 +538,72 @@ extension CoreDataOperations {
                 resetTime.value(forKey: "month") as! Int)
         
     }
+    
+    /**
+     Creates an array of list items for a checklist from the string provided
+     
+     - Parameter listItemsInString: List of items as *String*
+     
+     - Returns: An array of list of items as *ListItem*
+     */
+    fileprivate func convertStringToListItems(listItemsInString: String) -> [ListItem] {
+        
+        var listItemArray = [ListItem]()
+        
+        let arrayOfItems = listItemsInString.components(separatedBy: "\\i")
+        
+        for currentItem in arrayOfItems {
+            
+            // 0 position will have name of the item and 1 positon will have the status of that item
+            let tempArray = currentItem.components(separatedBy: "\\b")
+            
+            listItemArray.append(ListItem(name: tempArray[0], isCompleted: Bool(tempArray[1])!))
+        }
+        
+        return listItemArray
+    }
+    
+    /**
+     Here we convert **List of items** into a string in which items and its completion status will be seperated by some characters
+     
+     - Parameter items: An array of List Item of a checklist
+     
+     - Returns: A string made up of List Items and its completion status combined as one and seperated by some identifiers
+     */
+    fileprivate func convertListItemsToString(items: [ListItem]) -> String {
+        
+        /**
+         \\(Double back slash is used to avoid escape characters)
+         \i -> seperator between items
+         \b -> seperator between item name and it's boolean value
+         **/
+        
+        var arrayOfItems = Array<String>()
+        
+        for currentItem in items {
+            arrayOfItems.append("\(currentItem.name)\\b\(currentItem.isCompleted)")
+        }
+        
+        return arrayOfItems.joined(separator: "\\i")
+        
+    }
+    
+    /**
+        It takes the string which has all the item names and it completion status and resets all the item's completion status to **Not Completed** or **false**
+     
+        - Parameter itemsAsString: String representation of items and their completion status combined
+     
+        - Returns: Updated *string* representation of the checklist items with their completion status set to **false**
+    */
+    fileprivate func resetChecklistItemsAsString(itemsAsString: String) -> String {
+    
+        let checklistItemsAsListItems = convertStringToListItems(listItemsInString: itemsAsString)
+        
+        let updatedChecklistListItems = checklistItemsAsListItems.map( { ListItem(name: $0.name, isCompleted: false) } )
+        
+        return convertListItemsToString(items: updatedChecklistListItems)
+        
+    }
+    
     
 }

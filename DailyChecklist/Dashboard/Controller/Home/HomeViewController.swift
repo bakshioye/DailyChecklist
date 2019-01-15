@@ -45,7 +45,37 @@ class HomeViewController: UIViewController {
             checklistCollectionView.addSubview(NoChecklistView(frame: frame))
             return
         }
+
         
+        /// Here we will check the reset time for each checklist and update it accordingly
+        
+        // First we are creating an array of Checklist
+        let checklists:[Checklist] = checklistsFetched.map( { Checklist(checklistID: $0.value(forKey: "checklistID") as! UUID,
+                                                                      name: $0.value(forKey: "name") as! String,
+                                                                      creationDate: $0.value(forKey: "creationDate") as! Date,
+                                                                      items: convertStringToListItems(listItemsInString: $0.value(forKey: "items") as! String )) } )
+        
+        for currentChecklist in checklists {
+            
+            guard let resetTime = CoreDataOperations.shared.fetchResetTime(checklistID: currentChecklist.checklistID) else {
+                // There is no reset time set for this checklist
+                continue
+            }
+            
+            // Here we check if we need to update the reset time of the checklist
+            guard shouldChecklistBeReseted(checklistID: currentChecklist.checklistID, resetTime: resetTime) else {
+                // The time is not up yet
+                continue
+            }
+            
+            // Reset the completion status of the checklist's items
+            guard CoreDataOperations.shared.resetChecklistItemsCompletionStatus(checklistID: currentChecklist.checklistID) == .Success else { continue }
+        
+            // Update the lastResetAtTime
+            guard CoreDataOperations.shared.updateLastResetAtTime(checklistID: currentChecklist.checklistID) == .Success else { continue }
+            
+        }
+     
         checklistsArray = checklistsFetched
         checklistCollectionView.reloadData()
         
@@ -164,6 +194,38 @@ extension HomeViewController {
         let itemsWithStatusComleted = dictionaryOfItemsAndItsStatus.filter( { $1 == true } )
         
         return (itemsWithStatusComleted.count, dictionaryOfItemsAndItsStatus.count)
+        
+    }
+    
+    fileprivate func shouldChecklistBeReseted(checklistID: UUID, resetTime: TimeDomain) -> Bool {
+        
+        // Checking of there exists a "Last Reset at Time" for a checklist
+        guard let lastResetAtTime = CoreDataOperations.shared.fetchLastResetAtTime(checklistID: checklistID) else { return false }
+        
+        /// This date is computed after adding "Last Reset At Time" and "Reset Time"
+        var updatedDate = lastResetAtTime
+        
+        // Now we are adding every date component to our updated date
+        
+        if resetTime.month != 0 {
+            updatedDate = Calendar.current.date(byAdding: .month, value: resetTime.month, to: updatedDate, wrappingComponents: false)!
+        }
+        if resetTime.week != 0 {
+            updatedDate = Calendar.current.date(byAdding: .weekOfMonth, value: resetTime.week, to: updatedDate, wrappingComponents: false)!
+        }
+        if resetTime.day != 0 {
+            updatedDate = Calendar.current.date(byAdding: .day, value: resetTime.day, to: updatedDate, wrappingComponents: false)!
+        }
+        if resetTime.hour != 0 {
+            updatedDate = Calendar.current.date(byAdding: .hour, value: resetTime.hour, to: updatedDate, wrappingComponents: false)!
+        }
+        if resetTime.minute != 0 {
+            updatedDate = Calendar.current.date(byAdding: .minute, value: resetTime.minute, to: updatedDate, wrappingComponents: false)!
+        }
+        
+        // We are comparing the updated date with current date and time and if it is negative , it means we have exceeded the reset time and we need to reset checklist now!
+        
+        return updatedDate.timeIntervalSinceNow < 0 ? true : false
         
     }
     

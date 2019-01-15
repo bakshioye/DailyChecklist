@@ -14,8 +14,8 @@ struct Checklist {
     var creationDate: Date
     var items: [ListItem]
     
-    init(name: String, creationDate: Date, items: [ListItem]) {
-        checklistID = UUID.init()
+    init(checklistID: UUID = UUID.init(),name: String, creationDate: Date, items: [ListItem]) {
+        self.checklistID = checklistID
         self.name = name
         self.creationDate = creationDate
         self.items = items        
