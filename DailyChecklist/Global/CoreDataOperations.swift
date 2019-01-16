@@ -151,8 +151,6 @@ class CoreDataOperations {
             fatalError()
         }
         
-        //        print(resetTimeFetchedFromCoreData)
-        
         // If we have an empty array, then it signifies that there is no reset time set for that particular Checklist
         return resetTimeFetchedFromCoreData.count == 0 ? nil : convertResetTimeToTimeDomain(timeFromCoreData: resetTimeFetchedFromCoreData[0])
 
@@ -292,6 +290,9 @@ class CoreDataOperations {
             print("--------- ERROR IN DELETING RESET TIME FROM CORE DATA ---------- \\n \(error)")
             fatalError()
         }
+        
+        // Removing the Last Reset at Time for the checklist as well
+        guard removeLastResetAtTime(checklistID: checklistUUID) == .Success else { return .Failure }
         
         return .Success
         
@@ -472,6 +473,49 @@ class CoreDataOperations {
             try managedContext.save()
         } catch let error as NSError {
             print("------------- ERROR IN UPDATING LAST RESET AT TIME FOR CHECKLIST -------------- \\n \(error)")
+            fatalError()
+        }
+        
+        return .Success
+        
+    }
+    
+    /**
+        Delete the "Last Reset at Time" for a checklist
+     
+        - Parameter checklistID: ID of the checklist whose "Last Reset at Time" is to be deleted
+     
+        - Returns: Result for querying the database and whether it was success or failures
+    */
+    func removeLastResetAtTime(checklistID: UUID) -> DatabaseQueryResult {
+        
+        // Fetching the app delegate object
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return .Failure }
+        
+        // Fetching the managed context object
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        // Creating a fetch request object
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: CoreDataEntities.LastResetAtTime.rawValue)
+        fetchRequest.predicate = NSPredicate(format: "checklistID == %@", checklistID as CVarArg)
+        
+        /// This will store the Last Reset at Time fetched from Core Data
+        var lastResetAtTimeFromCoreData = [NSManagedObject]()
+        
+        do {
+            lastResetAtTimeFromCoreData = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("---------- ERROR IN FETCHING LAST RESET AT TIME FROM CORE DATA ------------ \\n \(error)")
+            fatalError()
+        }
+        
+        // Deleting the Last Reset at Time from our entity
+        managedContext.delete(lastResetAtTimeFromCoreData[0])
+        
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("------------ ERROR IN SAVING CONTEXT TO CORE DATA ----------- \\n \(error)")
             fatalError()
         }
         
