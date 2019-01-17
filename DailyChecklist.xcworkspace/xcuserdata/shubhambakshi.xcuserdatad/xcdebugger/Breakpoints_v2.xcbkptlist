@@ -6,16 +6,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "DailyChecklist/Checklist Board/Controller/ResetTimeViewController.swift"
-            timestampString = "568902620.675153"
+            filePath = "DailyChecklist/Dashboard/Controller/Home/HomeViewController.swift"
+            timestampString = "569409943.350215"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "156"
-            endingLineNumber = "156"
-            landmarkName = "tableView(_:didSelectRowAt:)"
+            startingLineNumber = "191"
+            endingLineNumber = "191"
+            landmarkName = "shouldChecklistBeReseted(checklistID:resetTime:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DailyChecklist/Dashboard/Controller/Home/HomeViewController.swift"
-            timestampString = "569240069.168632"
+            timestampString = "569409943.351364"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "51"
-            endingLineNumber = "51"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
             landmarkName = "viewDidAppear(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -42,12 +42,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DailyChecklist/Dashboard/Controller/Home/HomeViewController.swift"
-            timestampString = "569240151.641289"
+            timestampString = "569409943.352286"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "201"
-            endingLineNumber = "201"
-            landmarkName = "shouldChecklistBeReseted(checklistID:resetTime:)"
+            startingLineNumber = "222"
+            endingLineNumber = "222"
+            landmarkName = "actionForResetTimeChecker()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

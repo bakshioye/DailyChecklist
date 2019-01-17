@@ -18,10 +18,13 @@ class HomeViewController: UIViewController {
     // MARK: - Variables to be used
     var checklistsArray = [NSManagedObject]()
     
+    /// This will keep checking if the reset time is up for a checklist
+    var resetTimeChecker: Timer!
+    
     // MARK: - Overriding Inbuilt functions
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -47,39 +50,25 @@ class HomeViewController: UIViewController {
         }
 
         
-        /// Here we will check the reset time for each checklist and update it accordingly
+        // Here we are creating a timer which will run every minute as the shortest time that we have is 1 minute
+        resetTimeChecker = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(actionForResetTimeChecker), userInfo: nil, repeats: true)
         
-        // First we are creating an array of Checklist
-        let checklists:[Checklist] = checklistsFetched.map( { Checklist(checklistID: $0.value(forKey: "checklistID") as! UUID,
-                                                                      name: $0.value(forKey: "name") as! String,
-                                                                      creationDate: $0.value(forKey: "creationDate") as! Date,
-                                                                      items: convertStringToListItems(listItemsInString: $0.value(forKey: "items") as! String )) } )
-        
-        for currentChecklist in checklists {
-            
-            guard let resetTime = CoreDataOperations.shared.fetchResetTime(checklistID: currentChecklist.checklistID) else {
-                // There is no reset time set for this checklist
-                continue
-            }
-            
-            // Here we check if we need to update the reset time of the checklist
-            guard shouldChecklistBeReseted(checklistID: currentChecklist.checklistID, resetTime: resetTime) else {
-                // The time is not up yet
-                continue
-            }
-            
-            // Reset the completion status of the checklist's items
-            guard CoreDataOperations.shared.resetChecklistItemsCompletionStatus(checklistID: currentChecklist.checklistID) == .Success else { continue }
-        
-            // Update the lastResetAtTime
-            guard CoreDataOperations.shared.updateLastResetAtTime(checklistID: currentChecklist.checklistID) == .Success else { continue }
-            
-        }
-     
         checklistsArray = checklistsFetched
         checklistCollectionView.reloadData()
+    
+    }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        // Invalidating the timer
+        resetTimeChecker.invalidate()
         
     }
+    
+}
+
+// MARK: - Actions for buttons
+extension HomeViewController {
     
     @IBAction func editHome(_ sender: UIButton) {
         
@@ -225,7 +214,64 @@ extension HomeViewController {
         
         // We are comparing the updated date with current date and time and if it is negative , it means we have exceeded the reset time and we need to reset checklist now!
         
-        return updatedDate.timeIntervalSinceNow < 0 ? true : false
+        return updatedDate.timeIntervalSinceNow < 0
+        
+    }
+    
+    @objc func actionForResetTimeChecker() {
+ 
+        // Fetching all the Checklists that are there in Core Data
+        guard let checklistsFetched = CoreDataOperations.shared.fetchChecklists() else {
+            presentErrorAlert(title: "Oops! Something went wrong", message: "We could not fetch the checklists, Please close the app and try again")
+            return
+        }
+        
+        // Checking if the noChecklistView already exists or not
+        for currentView in checklistCollectionView.subviews {
+            if currentView is NoChecklistView { return }
+        }
+        
+        // Checking if there is any checklist in Core data
+        guard checklistsFetched.count > 0 else {
+            // present view for no checklist here
+            let frame = CGRect(x: 0, y: 0, width: checklistCollectionView.viewWidth, height: checklistCollectionView.viewHeight)
+            checklistCollectionView.addSubview(NoChecklistView(frame: frame))
+            return
+        }
+
+        
+        /// Here we will check the reset time for each checklist and update it accordingly
+        
+        // First we are creating an array of Checklist
+        let checklists:[Checklist] = checklistsFetched.map( { Checklist(checklistID: $0.value(forKey: "checklistID") as! UUID,
+                                                                        name: $0.value(forKey: "name") as! String,
+                                                                        creationDate: $0.value(forKey: "creationDate") as! Date,
+                                                                        items: convertStringToListItems(listItemsInString: $0.value(forKey: "items") as! String )) } )
+        
+        for currentChecklist in checklists {
+            
+            guard let resetTime = CoreDataOperations.shared.fetchResetTime(checklistID: currentChecklist.checklistID) else {
+                // There is no reset time set for this checklist
+                continue
+            }
+            
+            // Here we check if we need to update the reset time of the checklist
+            guard shouldChecklistBeReseted(checklistID: currentChecklist.checklistID, resetTime: resetTime) else {
+                // The time is not up yet
+                continue
+            }
+            
+            // Reset the completion status of the checklist's items
+            guard CoreDataOperations.shared.resetChecklistItemsCompletionStatus(checklistID: currentChecklist.checklistID) == .Success else { continue }
+            
+            // Update the lastResetAtTime
+            guard CoreDataOperations.shared.updateLastResetAtTime(checklistID: currentChecklist.checklistID) == .Success else { continue }
+            
+        }
+        
+        checklistsArray = checklistsFetched
+        checklistCollectionView.reloadData()
+        
         
     }
     
