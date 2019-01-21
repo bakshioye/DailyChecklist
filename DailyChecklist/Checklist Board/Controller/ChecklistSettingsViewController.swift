@@ -156,6 +156,7 @@ extension ChecklistSettingsViewController: UITableViewDelegate {
             
             resetTimeVCObject.transferDataDelegate = self
             resetTimeVCObject.checklistUUID = checklistUUID!
+            resetTimeVCObject.resetTimeAlreadySet = CoreDataOperations.shared.fetchResetTime(checklistID: checklistUUID!)
             
             self.navigationController?.pushViewController(resetTimeVCObject, animated: true)
             

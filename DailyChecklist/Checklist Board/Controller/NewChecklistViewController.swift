@@ -208,7 +208,7 @@ extension NewChecklistViewController: TransferData {
         resetTimeSelected = newResetTime
         
         // Updating the label on the button
-        addResetTimeButton.setTitle("Update / Remove reset time", for: .normal)
+        addResetTimeButton.setTitle("Reset Time : \(convertTimeDomainToString(resetTimeSelected!)) ", for: .normal)
         
     }
     

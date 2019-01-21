@@ -135,15 +135,15 @@ extension UIViewController {
     */
     func convertTimeDomainToString(_ timeInDomain:TimeDomain) -> String {
         
-        let monthsString = timeInDomain.month != 0 ? "\(timeInDomain.month) months " : ""
+        let monthsString = timeInDomain.month != 0 ? (timeInDomain.month > 1 ? "\(timeInDomain.month) months " : "\(timeInDomain.month) month " ) : ""
         
-        let weeksString = timeInDomain.week != 0 ? "\(timeInDomain.week) weeks " : ""
+        let weeksString = timeInDomain.week != 0 ? (timeInDomain.week > 1 ? "\(timeInDomain.week) weeks " : "\(timeInDomain.week) week " ) : ""
         
-        let daysString = timeInDomain.day != 0 ? "\(timeInDomain.day) days " : ""
+        let daysString = timeInDomain.day != 0 ? (timeInDomain.day > 1 ? "\(timeInDomain.day) days " : "\(timeInDomain.day) day " ) : ""
         
-        let hoursString = timeInDomain.hour != 0 ? "\(timeInDomain.hour) hours " : ""
+        let hoursString = timeInDomain.hour != 0 ? (timeInDomain.hour > 1 ? "\(timeInDomain.hour) hours " : "\(timeInDomain.hour) hour " ) : ""
         
-        let minuteString = timeInDomain.minute != 0 ? "\(timeInDomain.minute) minutes " : ""
+        let minuteString = timeInDomain.minute != 0 ? (timeInDomain.minute > 1 ? "\(timeInDomain.minute) minutes " : "\(timeInDomain.minute) minute " ) : ""
         
         return monthsString+weeksString+daysString+hoursString+minuteString
         
