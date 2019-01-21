@@ -1,9 +1,11 @@
 # DailyChecklist
 
-**Currently Ongoing Project and is in initial stages**
+**Currently Ongoing Project and is in initial stages** 
+
+*Strike-Through points means they are completed*
 
 A To-Do application with following features (some features are still under work) : 
-1. Resetable List which resets *all or some* of the checklist items depending on the time specified
+1. ~~Resetable List which resets *all or some* of the checklist items depending on the time specified~~
 1. Probably, the first checklist app, which displays multiple checklists on *dashboard* in form of *Collection View* instead of *Table View* 
 1. Prioritize different checklists
 
