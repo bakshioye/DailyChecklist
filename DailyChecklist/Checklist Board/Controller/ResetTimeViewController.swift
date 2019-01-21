@@ -21,11 +21,18 @@ fileprivate enum TimeDomainsType: String {
     case Months
 }
 
+/// This will help in determing which VC presented this vc and thus we can take the necessary step
+fileprivate enum PresentedViewController {
+    case NewChecklistVC
+    case ChecklistSettingVC
+}
+
 class ResetTimeViewController: UITableViewController {
 
     // TODO: - Create a logic for reset time starting from NOW or SOME OTHER SPECIFIED TIME
-    // TODO: - If there is already a reset time selected, then mark it with a tick
-    
+    // TODO: If there is already a reset time selected, then mark it with a tick
+
+
     // MARK: - Local variables to be used
     var resetTimesArray:[ResetTimes] = [ResetTimes(category: .Minute, values: ["10 minutes","20 minutes","30 minutes"]),
                                         ResetTimes(category: .Hour, values: ["1 hour","2 hours","3 hours","5 hours","10 hours","12 hours","15 hours"]),
@@ -33,29 +40,47 @@ class ResetTimeViewController: UITableViewController {
                                         ResetTimes(category: .Week, values: ["1 week","2 weeks","3 weeks"]),
                                         ResetTimes(category: .Month, values: ["1 month","2 months"]) ]
     
-    var resetTimeSelected:TimeInterval?
     
+    /// The Reset time already set for the checklist, *nil otherwise*
+    var resetTimeAlreadySet: TimeDomain?
+    
+    /// **TransferData** object used to transfer data to the previous View Controller
     var transferDataDelegate:TransferData?
     
+    /// ID for the checklist for which the reset time is to be modified
     var checklistUUID: UUID?
     
     /// Used to store "Custom time" from Core Data made by user in the past
     var customResetTimes = [TimeDomain]()
     
+    /// This will signify which View controller presented this View Controller
+    fileprivate var viewControllerThatPresentedThis: PresentedViewController!
+    
     // MARK: - Overriding inbuilt functions
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        // Checking which View Controller presented this and assigning the value accordingly
+        if let viewControllerThatPresentedThis = self.navigationController?.viewControllers[(self.navigationController?.viewControllers.count)! - 2], viewControllerThatPresentedThis is NewChecklistViewController {
+            self.viewControllerThatPresentedThis = PresentedViewController.NewChecklistVC
+        }
+        else {
+            self.viewControllerThatPresentedThis = PresentedViewController.ChecklistSettingVC
+        }
+        
         customizeTableView()
         
         addNavigationBarButtons()
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
         
         customResetTimes = CoreDataOperations.shared.fetchSavedCustomResetTime()
+        
         /// We are reloading here as when we come back after creating our own custom time, it will be reflected here
         tableView.reloadData()
+        
     }
 
 }
@@ -110,10 +135,25 @@ extension ResetTimeViewController {
             
             cell.timeLabel.text = convertTimeDomainToString(customResetTimes[indexPath.row])
             
+            // Changing the background color for already selected cell
+            if let resetTimeAlreadySet = resetTimeAlreadySet, resetTimeAlreadySet == customResetTimes[indexPath.row] {
+                
+                cell.contentView.backgroundColor = UIColor(hexString: "#e6ee9c")
+                
+            }
+            
             return cell
         }
         
         cell.timeLabel.text = resetTimesArray[indexPath.section].values[indexPath.row]
+        
+        // Changing the background color for already selected cell
+        if let resetTimeAlreadySet = resetTimeAlreadySet, resetTimeAlreadySet == convertStringToTimeDomain(resetTimesArray[indexPath.section].values[indexPath.row]) {
+            
+            cell.contentView.backgroundColor = UIColor(hexString: "#e6ee9c")
+            
+        }
+        
         
         return cell
         
@@ -151,8 +191,6 @@ extension ResetTimeViewController {
             
             let customResetTimeVCObject = self.storyboard?.instantiateViewController(withIdentifier: CHECKLIST_CUSTOM_RESET_TIME_VC_IDENTIFIER) as! CustomResetTimeViewController
             
-            customResetTimeVCObject.transferDataBackDelegate = self
-            
             self.navigationController?.pushViewController(customResetTimeVCObject, animated: true)
             
             return
@@ -166,18 +204,6 @@ extension ResetTimeViewController {
         transferDataDelegate?.updateResetTime(newResetTime: selectedTimeInTimeDomain)
         
         navigationController?.popViewController(animated: true)
-        
-    }
-    
-}
-
-// MARK: - Conforming to the Transfer Data Protocol
-extension ResetTimeViewController: TransferData {
-    
-    func customTimeSelected(inSeconds: TimeInterval) {
-        
-        // Here we have the custom time was selected
-        resetTimeSelected = inSeconds
         
     }
     
@@ -207,20 +233,22 @@ extension ResetTimeViewController {
     
     @objc func actionForRemoveResetTime(_ button: UIBarButtonItem) {
         
-        if CoreDataOperations.shared.removeResetTime(checklistUUID: checklistUUID!) == .Failure {
+        // Since , when we are creating a new checklist, we are not saving the reset time in core data unless the user clicks "Save" , we need not perform this core data operation
+        if viewControllerThatPresentedThis == PresentedViewController.ChecklistSettingVC {
+            if CoreDataOperations.shared.removeResetTime(checklistUUID: checklistUUID!) == .Failure {
             presentErrorAlert(title: "Error -- Reset time could not be removed", message: "The reset time linked to the checkist could not be removed at the moment, Please try again")
+            }
         }
         
         // Setting the Reset Time label to Not Set
         transferDataDelegate?.removeResetTime()
         
-        // Going back to the screen
+        // Going back to the previous screen
         navigationController?.popViewController(animated: true)
         
     }
-
     
-
+    
 }
 
 

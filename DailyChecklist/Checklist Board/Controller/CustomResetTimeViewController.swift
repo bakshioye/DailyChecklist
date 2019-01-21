@@ -41,8 +41,6 @@ class CustomResetTimeViewController: UIViewController {
         }
     }
     
-    // For transfering the selcted time back to the previous View Controller
-    var transferDataBackDelegate: TransferData?
     
     // MARK: - Overriding inbuilt functions
     override func viewDidLoad() {
@@ -422,9 +420,6 @@ extension CustomResetTimeViewController {
             }
             
         }
-        
-        // Transfering the selected custom time back to the previous View Controller
-        transferDataBackDelegate?.customTimeSelected(inSeconds: convertSelctedTimeToSeconds())
         
         /// Fetch the selected time and transfer it to the ViewController before
         self.navigationController?.popViewController(animated: true)

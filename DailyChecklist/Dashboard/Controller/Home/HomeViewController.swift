@@ -60,6 +60,9 @@ class HomeViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
+        /// In case where no checklist exists in our app, the timer will never be initialised as we have decided the logic according to that and thus resetTimeChecker will be nil
+        guard resetTimeChecker != nil else { return }
+        
         // Invalidating the timer
         resetTimeChecker.invalidate()
         

@@ -139,7 +139,8 @@
                         <viewLayoutGuide key="safeArea" id="YSY-wv-5nG"/>
                     </view>
                     <navigationItem key="navigationItem" title="Home" largeTitleDisplayMode="always" id="Nww-r7-9KM">
-                        <barButtonItem key="leftBarButtonItem" systemItem="edit" id="gup-jP-GOn">
+                        <barButtonItem key="leftBarButtonItem" title="Delete" id="gup-jP-GOn">
+                            <color key="tintColor" red="0.71764705880000002" green="0.10980392160000001" blue="0.10980392160000001" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="editHome:" destination="Exb-BM-jNt" id="4ar-cG-neW"/>
                             </connections>

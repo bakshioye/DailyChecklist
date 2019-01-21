@@ -478,7 +478,7 @@
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="QnI-Xb-nHE">
-                                <rect key="frame" x="0.0" y="146.33333333333331" width="375" height="631.66666666666674"/>
+                                <rect key="frame" x="0.0" y="146.33333333333331" width="375" height="591.66666666666674"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="newChecklistTVCell" rowHeight="50" id="8i4-bl-AY7" customClass="NewChecklistTableViewCell" customModule="DailyChecklist" customModuleProvider="target">
@@ -561,15 +561,40 @@
                                     <outlet property="delegate" destination="bJf-Ak-pB8" id="2UB-xs-fpt"/>
                                 </connections>
                             </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4P8-Sm-bE5" userLabel="Add Reset Time View">
+                                <rect key="frame" x="0.0" y="738" width="375" height="40"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vcH-ZE-mKs">
+                                        <rect key="frame" x="0.0" y="5" width="375" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="zeE-aX-j7p"/>
+                                        </constraints>
+                                        <state key="normal" title="+ Add Reset Time"/>
+                                        <connections>
+                                            <action selector="actionAddResetTime:" destination="bJf-Ak-pB8" eventType="touchUpInside" id="TJB-y1-jFB"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="vcH-ZE-mKs" firstAttribute="centerY" secondItem="4P8-Sm-bE5" secondAttribute="centerY" id="7O0-PO-3na"/>
+                                    <constraint firstAttribute="height" constant="40" id="G9z-3f-sM7"/>
+                                    <constraint firstItem="vcH-ZE-mKs" firstAttribute="width" secondItem="4P8-Sm-bE5" secondAttribute="width" id="Wf7-kF-jYd"/>
+                                    <constraint firstItem="vcH-ZE-mKs" firstAttribute="centerX" secondItem="4P8-Sm-bE5" secondAttribute="centerX" id="qNr-OZ-b6e"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="QnI-Xb-nHE" firstAttribute="leading" secondItem="z6i-YL-IEU" secondAttribute="leading" id="3iV-Dv-qe0"/>
-                            <constraint firstItem="z6i-YL-IEU" firstAttribute="bottom" secondItem="QnI-Xb-nHE" secondAttribute="bottom" id="3mZ-7Z-qXh"/>
+                            <constraint firstItem="4P8-Sm-bE5" firstAttribute="top" secondItem="QnI-Xb-nHE" secondAttribute="bottom" id="3mZ-7Z-qXh"/>
                             <constraint firstItem="a7u-Bx-NpV" firstAttribute="height" secondItem="z6i-YL-IEU" secondAttribute="height" multiplier="0.07" id="Aah-3a-3C0"/>
                             <constraint firstItem="QnI-Xb-nHE" firstAttribute="top" secondItem="a7u-Bx-NpV" secondAttribute="bottom" constant="10" id="Fvx-b1-Mjb"/>
+                            <constraint firstItem="z6i-YL-IEU" firstAttribute="bottom" secondItem="4P8-Sm-bE5" secondAttribute="bottom" id="IWi-8h-uGF"/>
+                            <constraint firstItem="z6i-YL-IEU" firstAttribute="trailing" secondItem="4P8-Sm-bE5" secondAttribute="trailing" id="bwC-MF-2U4"/>
                             <constraint firstItem="a7u-Bx-NpV" firstAttribute="top" secondItem="z6i-YL-IEU" secondAttribute="top" id="ewd-18-Ejc"/>
                             <constraint firstItem="a7u-Bx-NpV" firstAttribute="leading" secondItem="z6i-YL-IEU" secondAttribute="leading" id="iIE-mY-YrX"/>
+                            <constraint firstItem="4P8-Sm-bE5" firstAttribute="leading" secondItem="z6i-YL-IEU" secondAttribute="leading" id="kAz-jB-LBW"/>
                             <constraint firstItem="z6i-YL-IEU" firstAttribute="trailing" secondItem="QnI-Xb-nHE" secondAttribute="trailing" id="l8Y-wd-jHX"/>
                             <constraint firstItem="z6i-YL-IEU" firstAttribute="trailing" secondItem="a7u-Bx-NpV" secondAttribute="trailing" id="tXZ-Kl-DOG"/>
                         </constraints>
@@ -583,6 +608,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="addResetTimeButton" destination="vcH-ZE-mKs" id="QHl-BS-ihL"/>
                         <outlet property="checklistNameBottomBorder" destination="UTJ-tY-fHC" id="6u1-pa-TNp"/>
                         <outlet property="checklistNameField" destination="wkX-nh-C5I" id="DgH-Uy-BGt"/>
                         <outlet property="checklistTableView" destination="QnI-Xb-nHE" id="ypk-Yh-YaT"/>

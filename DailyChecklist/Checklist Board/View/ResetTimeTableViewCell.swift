@@ -23,6 +23,7 @@ class ResetTimeTableViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         timeLabel.textColor = UIColor(hexString: "#212121")
+        contentView.backgroundColor = UIColor.white
     }
     
 }

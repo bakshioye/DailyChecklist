@@ -18,9 +18,15 @@ class NewChecklistViewController: UIViewController {
     
     @IBOutlet weak var saveButton: UIBarButtonItem!
     
+    @IBOutlet weak var addResetTimeButton: UIButton!
+    
     // MARK: - Variables to be used
+    
+    /// Collection of all the cheecklist items or tasks
     var checklistItems = [ListItem]()
     
+    /// The reset time selected for the checklist . **Can be nil**
+    var resetTimeSelected: TimeDomain?
     
     // MARK: - Overriding inbuilt functions
     override func viewDidLoad() {
@@ -60,6 +66,23 @@ class NewChecklistViewController: UIViewController {
         
         // Going back to HomeVC
         self.dismiss(animated: true, completion: nil)
+        
+    }
+    
+    @IBAction func actionAddResetTime(_ addResetTimeButton: UIButton) {
+        
+        // Creating the object for navigation
+        let resetTimeVCObject = self.storyboard?.instantiateViewController(withIdentifier: CHECKLIST_SETTINGS_RESET_TIME_VC_IDENTIFIER) as! ResetTimeViewController
+        
+        resetTimeVCObject.transferDataDelegate = self
+        
+        // If we have already selected a reset time and user wants to either change or remove the already setted reset time
+        if resetTimeSelected != nil {
+            resetTimeVCObject.resetTimeAlreadySet = resetTimeSelected
+        }
+        
+        // Pushing the View Controller on the Navigation Stack
+        self.navigationController?.pushViewController(resetTimeVCObject, animated: true)
         
     }
 
@@ -172,6 +195,31 @@ extension NewChecklistViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 50.0
+    }
+    
+}
+
+// MARK: - Transfer Data Protocol Implementation
+extension NewChecklistViewController: TransferData {
+    
+    func updateResetTime(newResetTime: TimeDomain) {
+        
+        // Making the reset time global to use
+        resetTimeSelected = newResetTime
+        
+        // Updating the label on the button
+        addResetTimeButton.setTitle("Update / Remove reset time", for: .normal)
+        
+    }
+    
+    func removeResetTime() {
+        
+        // Removing the reset time selected by the user
+        resetTimeSelected = nil
+        
+        // Updating the label on the button
+        addResetTimeButton.setTitle("+ Add Reset Time", for: .normal)
+        
     }
     
 }
