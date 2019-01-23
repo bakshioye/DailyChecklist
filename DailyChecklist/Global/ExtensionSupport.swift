@@ -244,6 +244,40 @@ extension UIViewController {
         return arrayOfItems.joined(separator: "\\i")
         
     }
+    
+    /**
+        This function adds a blur effect to the *Main View* of the view controller (i.e. self.view)
+     
+        - Parameter shouldBeAdded: *true* in case the blur effect should be added, *false* in case blur effect should be removed
+     
+    */
+    func blurBackgroundEffect(shouldBeAdded: Bool) {
+        
+        switch shouldBeAdded {
+            
+        case true:
+            // Creating a blur effect
+            let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.extraLight)
+            
+            // Main Blur Effect View
+            let blurEffectView = UIVisualEffectView(effect: blurEffect)
+            blurEffectView.frame = view.frame
+            blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            
+            // We are providing this tag so that we can remove this Blur View later
+            blurEffectView.tag = 1001
+            
+            view.addSubview(blurEffectView)
+            
+        case false:
+            
+            if let viewWithTag1001 = self.view.viewWithTag(1001) {
+                viewWithTag1001.removeFromSuperview()
+            }
+            
+        }
+    
+    }
 
 }
 

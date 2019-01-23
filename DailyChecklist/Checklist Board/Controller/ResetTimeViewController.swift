@@ -54,19 +54,11 @@ class ResetTimeViewController: UITableViewController {
     var customResetTimes = [TimeDomain]()
     
     /// This will signify which View controller presented this View Controller
-    fileprivate var viewControllerThatPresentedThis: PresentedViewController!
+//    fileprivate var viewControllerThatPresentedThis: PresentedViewController!
     
     // MARK: - Overriding inbuilt functions
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Checking which View Controller presented this and assigning the value accordingly
-        if let viewControllerThatPresentedThis = self.navigationController?.viewControllers[(self.navigationController?.viewControllers.count)! - 2], viewControllerThatPresentedThis is NewChecklistViewController {
-            self.viewControllerThatPresentedThis = PresentedViewController.NewChecklistVC
-        }
-        else {
-            self.viewControllerThatPresentedThis = PresentedViewController.ChecklistSettingVC
-        }
         
         customizeTableView()
         
@@ -137,9 +129,7 @@ extension ResetTimeViewController {
             
             // Changing the background color for already selected cell
             if let resetTimeAlreadySet = resetTimeAlreadySet, resetTimeAlreadySet == customResetTimes[indexPath.row] {
-                
-                cell.contentView.backgroundColor = UIColor(hexString: "#e6ee9c")
-                
+                cell.contentView.backgroundColor = UIColor(hexString: "#e6ee9c")                
             }
             
             return cell
@@ -233,14 +223,14 @@ extension ResetTimeViewController {
     
     @objc func actionForRemoveResetTime(_ button: UIBarButtonItem) {
         
-        // Since , when we are creating a new checklist, we are not saving the reset time in core data unless the user clicks "Save" , we need not perform this core data operation
-        if viewControllerThatPresentedThis == PresentedViewController.ChecklistSettingVC {
+        if checklistUUID != nil {
+            /// Navigating from ChecklistVC
             if CoreDataOperations.shared.removeResetTime(checklistUUID: checklistUUID!) == .Failure {
-            presentErrorAlert(title: "Error -- Reset time could not be removed", message: "The reset time linked to the checkist could not be removed at the moment, Please try again")
+                presentErrorAlert(title: "Error -- Reset time could not be removed", message: "The reset time linked to the checkist could not be removed at the moment, Please try again")
             }
+            
         }
         
-        // Setting the Reset Time label to Not Set
         transferDataDelegate?.removeResetTime()
         
         // Going back to the previous screen

@@ -247,6 +247,7 @@ extension HomeViewController {
         
         // First we are creating an array of Checklist
         let checklists:[Checklist] = checklistsFetched.map( { Checklist(checklistID: $0.value(forKey: "checklistID") as! UUID,
+                                                                        priority: ChecklistPriority(rawValue: $0.value(forKey: "priority") as! String)!,
                                                                         name: $0.value(forKey: "name") as! String,
                                                                         creationDate: $0.value(forKey: "creationDate") as! Date,
                                                                         items: convertStringToListItems(listItemsInString: $0.value(forKey: "items") as! String )) } )

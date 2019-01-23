@@ -12,10 +12,12 @@ protocol TransferData {
     func updateResetTime(newResetTime: TimeDomain)
     func customTimeSelected(inSeconds: TimeInterval)
     func removeResetTime()
+    func prioritySelected(_ priority: ChecklistPriority)
 }
 
 extension TransferData {
     func updateResetTime(newResetTime: TimeDomain) { }
     func customTimeSelected(inSeconds: TimeInterval) { }
     func removeResetTime() { }
+    func prioritySelected(_ priority: ChecklistPriority) { }
 }

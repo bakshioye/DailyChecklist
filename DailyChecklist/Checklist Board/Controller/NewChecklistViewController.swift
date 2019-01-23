@@ -18,7 +18,7 @@ class NewChecklistViewController: UIViewController {
     
     @IBOutlet weak var saveButton: UIBarButtonItem!
     
-    @IBOutlet weak var addResetTimeButton: UIButton!
+    @IBOutlet weak var settingsButton: UIButton!
     
     // MARK: - Variables to be used
     
@@ -27,6 +27,9 @@ class NewChecklistViewController: UIViewController {
     
     /// The reset time selected for the checklist . **Can be nil**
     var resetTimeSelected: TimeDomain?
+    
+    /// The priority selected for the checklist . **Can be nil**
+    var prioritySelected: ChecklistPriority?
     
     // MARK: - Overriding inbuilt functions
     override func viewDidLoad() {
@@ -56,7 +59,7 @@ class NewChecklistViewController: UIViewController {
         checklistItems = fetchChecklistItems()
         
         // Inserting the Checklist into Core Data and checking the response
-        guard CoreDataOperations.shared.createNewChecklist(checklist: Checklist(name: checklistNameField.text!, creationDate: Date(), items: checklistItems)) == .Success else {
+        guard CoreDataOperations.shared.createNewChecklist(checklist: Checklist(priority: prioritySelected ?? .None, name: checklistNameField.text!, creationDate: Date(), items: checklistItems)) == .Success else {
             
             // There was failure in creating checklist
             presentErrorAlert(title: "Checklist could not be created", message: "There was an error creating checklist at the moment, Please try again")
@@ -69,20 +72,22 @@ class NewChecklistViewController: UIViewController {
         
     }
     
-    @IBAction func actionAddResetTime(_ addResetTimeButton: UIButton) {
+    @IBAction func actionSettingsPage(_ addResetTimeButton: UIButton) {
         
         // Creating the object for navigation
-        let resetTimeVCObject = self.storyboard?.instantiateViewController(withIdentifier: CHECKLIST_SETTINGS_RESET_TIME_VC_IDENTIFIER) as! ResetTimeViewController
+        let checklistSettingVCObject = self.storyboard?.instantiateViewController(withIdentifier: CHECKLIST_SETTINGS_VC_IDENTIFIER) as! ChecklistSettingsViewController
         
-        resetTimeVCObject.transferDataDelegate = self
+        checklistSettingVCObject.transferDataDelegate = self
         
         // If we have already selected a reset time and user wants to either change or remove the already setted reset time
         if resetTimeSelected != nil {
-            resetTimeVCObject.resetTimeAlreadySet = resetTimeSelected
+            checklistSettingVCObject.resetTimeAlreadySet = resetTimeSelected
         }
         
+        checklistSettingVCObject.priorityAlreadySet = prioritySelected ?? ChecklistPriority.None
+        
         // Pushing the View Controller on the Navigation Stack
-        self.navigationController?.pushViewController(resetTimeVCObject, animated: true)
+        self.navigationController?.pushViewController(checklistSettingVCObject, animated: true)
         
     }
 
@@ -203,23 +208,17 @@ extension NewChecklistViewController: UITableViewDelegate {
 extension NewChecklistViewController: TransferData {
     
     func updateResetTime(newResetTime: TimeDomain) {
-        
         // Making the reset time global to use
         resetTimeSelected = newResetTime
-        
-        // Updating the label on the button
-        addResetTimeButton.setTitle("Reset Time : \(convertTimeDomainToString(resetTimeSelected!)) ", for: .normal)
-        
     }
     
     func removeResetTime() {
-        
         // Removing the reset time selected by the user
         resetTimeSelected = nil
-        
-        // Updating the label on the button
-        addResetTimeButton.setTitle("+ Add Reset Time", for: .normal)
-        
+    }
+    
+    func prioritySelected(_ priority: ChecklistPriority) {
+        prioritySelected = priority
     }
     
 }

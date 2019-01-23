@@ -37,6 +37,7 @@
 		5356FEC8219D95A40064FF27 /* HomeCVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5356FEC6219D95A40064FF27 /* HomeCVCell.swift */; };
 		5356FECF219D9A270064FF27 /* ChecklistBoard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5356FECE219D9A270064FF27 /* ChecklistBoard.storyboard */; };
 		5356FED1219D9AE40064FF27 /* ChecklistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5356FED0219D9AE40064FF27 /* ChecklistViewController.swift */; };
+		535E4A2C21F73A6800EBC4CB /* PrioritySelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535E4A2B21F73A6800EBC4CB /* PrioritySelectionView.swift */; };
 		535FFBFD21C77E5A00829D02 /* CustomResetTimeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535FFBFC21C77E5A00829D02 /* CustomResetTimeViewController.swift */; };
 		535FFBFF21C7985900829D02 /* CustomResetTimeSaveCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535FFBFE21C7985900829D02 /* CustomResetTimeSaveCell.swift */; };
 		535FFC0321C7A96500829D02 /* CustomResetTimeDomainCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 535FFC0221C7A96500829D02 /* CustomResetTimeDomainCell.swift */; };
@@ -109,6 +110,7 @@
 		5356FEC6219D95A40064FF27 /* HomeCVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCVCell.swift; sourceTree = "<group>"; };
 		5356FECE219D9A270064FF27 /* ChecklistBoard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ChecklistBoard.storyboard; sourceTree = "<group>"; };
 		5356FED0219D9AE40064FF27 /* ChecklistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChecklistViewController.swift; sourceTree = "<group>"; };
+		535E4A2B21F73A6800EBC4CB /* PrioritySelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrioritySelectionView.swift; sourceTree = "<group>"; };
 		535FFBFC21C77E5A00829D02 /* CustomResetTimeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomResetTimeViewController.swift; sourceTree = "<group>"; };
 		535FFBFE21C7985900829D02 /* CustomResetTimeSaveCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomResetTimeSaveCell.swift; sourceTree = "<group>"; };
 		535FFC0221C7A96500829D02 /* CustomResetTimeDomainCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomResetTimeDomainCell.swift; sourceTree = "<group>"; };
@@ -372,6 +374,7 @@
 				537037EA21BFB568003E0B68 /* ResetTimeTableViewCell.swift */,
 				535FFBFE21C7985900829D02 /* CustomResetTimeSaveCell.swift */,
 				535FFC0221C7A96500829D02 /* CustomResetTimeDomainCell.swift */,
+				535E4A2B21F73A6800EBC4CB /* PrioritySelectionView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -629,6 +632,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				48D4A55D21EA600B009AE85E /* ResetTimes.swift in Sources */,
+				535E4A2C21F73A6800EBC4CB /* PrioritySelectionView.swift in Sources */,
 				5352DFC5219ACDCC0086B2BE /* Constants.swift in Sources */,
 				537037E921BFB330003E0B68 /* ResetTimeViewController.swift in Sources */,
 				536382CB21B5378D008DA8E3 /* NewChecklistTableViewCell.swift in Sources */,

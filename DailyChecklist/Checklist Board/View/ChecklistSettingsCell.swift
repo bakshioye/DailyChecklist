@@ -17,7 +17,8 @@ class ChecklistSettingsCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        
+        // Disable the gray background of cell upon selection
+        self.selectionStyle = .none
         
     }
 

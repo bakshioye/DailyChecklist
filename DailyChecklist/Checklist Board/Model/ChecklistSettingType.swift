@@ -10,4 +10,5 @@ import Foundation
 
 enum ChecklistSettingType: String {
     case ResetTime = "Reset Time"
+    case Priority
 }

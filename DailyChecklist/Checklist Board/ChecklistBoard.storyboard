@@ -36,7 +36,7 @@
                                             <constraint firstAttribute="width" constant="30" id="Zlv-MN-NYM"/>
                                             <constraint firstAttribute="height" constant="30" id="moX-0v-TgM"/>
                                         </constraints>
-                                        <state key="normal" title="Button" image="infoIconBlue"/>
+                                        <state key="normal" title="Button" image="checklistSettingIcon"/>
                                         <connections>
                                             <segue destination="LCQ-y3-Gka" kind="show" identifier="settings" id="ldU-0J-KD1"/>
                                         </connections>
@@ -565,13 +565,13 @@
                                 <rect key="frame" x="0.0" y="738" width="375" height="40"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vcH-ZE-mKs">
-                                        <rect key="frame" x="0.0" y="5" width="375" height="30"/>
+                                        <rect key="frame" x="140.66666666666666" y="5" width="93.666666666666657" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="zeE-aX-j7p"/>
                                         </constraints>
-                                        <state key="normal" title="+ Add Reset Time"/>
+                                        <state key="normal" title="Settings"/>
                                         <connections>
-                                            <action selector="actionAddResetTime:" destination="bJf-Ak-pB8" eventType="touchUpInside" id="TJB-y1-jFB"/>
+                                            <action selector="actionSettingsPage:" destination="bJf-Ak-pB8" eventType="touchUpInside" id="Qvr-la-PwB"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -579,7 +579,7 @@
                                 <constraints>
                                     <constraint firstItem="vcH-ZE-mKs" firstAttribute="centerY" secondItem="4P8-Sm-bE5" secondAttribute="centerY" id="7O0-PO-3na"/>
                                     <constraint firstAttribute="height" constant="40" id="G9z-3f-sM7"/>
-                                    <constraint firstItem="vcH-ZE-mKs" firstAttribute="width" secondItem="4P8-Sm-bE5" secondAttribute="width" id="Wf7-kF-jYd"/>
+                                    <constraint firstItem="vcH-ZE-mKs" firstAttribute="width" secondItem="4P8-Sm-bE5" secondAttribute="width" multiplier="0.25" id="Wf7-kF-jYd"/>
                                     <constraint firstItem="vcH-ZE-mKs" firstAttribute="centerX" secondItem="4P8-Sm-bE5" secondAttribute="centerX" id="qNr-OZ-b6e"/>
                                 </constraints>
                             </view>
@@ -608,11 +608,11 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="addResetTimeButton" destination="vcH-ZE-mKs" id="QHl-BS-ihL"/>
                         <outlet property="checklistNameBottomBorder" destination="UTJ-tY-fHC" id="6u1-pa-TNp"/>
                         <outlet property="checklistNameField" destination="wkX-nh-C5I" id="DgH-Uy-BGt"/>
                         <outlet property="checklistTableView" destination="QnI-Xb-nHE" id="ypk-Yh-YaT"/>
                         <outlet property="saveButton" destination="CND-OP-zNf" id="hpv-pL-fIC"/>
+                        <outlet property="settingsButton" destination="vcH-ZE-mKs" id="kQD-wH-8md"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="J9F-Xy-sXl" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -659,6 +659,6 @@
     <resources>
         <image name="addMoreIcon" width="512" height="512"/>
         <image name="cellRightArrow" width="491.51998901367188" height="491.51998901367188"/>
-        <image name="infoIconBlue" width="225" height="225"/>
+        <image name="checklistSettingIcon" width="491.51998901367188" height="491.51998901367188"/>
     </resources>
 </document>

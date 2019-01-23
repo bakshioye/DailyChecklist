@@ -43,6 +43,7 @@ class CoreDataOperations {
         
         // Setting the values for various attributes
         list.setValue(checklist.name, forKey: "name")
+        list.setValue(checklist.priority.rawValue, forKey: "priority")
         list.setValue(itemsConvertedToString, forKey: "items")
         list.setValue(checklist.creationDate, forKey: "creationDate")
         list.setValue(checklist.checklistID, forKey: "checklistID")
@@ -572,6 +573,40 @@ class CoreDataOperations {
         
         return .Success
         
+    }
+    
+    // MARK: - Checklist priority functions
+    
+    /**
+        Fetches the priority for the checklist
+     
+        - Parameter checklistID: ID for the checklist
+     
+        - Returns: *String* representation of the priority of the checklist
+    */
+    func fetchChecklistPriority(checklistID: UUID) -> String? {
+        
+        // Fetching the App Delegate object
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return nil }
+        
+        // Creating an NSManagedContext object
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        // Creating a fetch request object
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: CoreDataEntities.List.rawValue)
+        fetchRequest.predicate = NSPredicate(format: "checklistID == %@", checklistID as CVarArg)
+        
+        /// This array will hold the records fetched from Core Data
+        var resultsFetchedFromCoreData = [NSManagedObject]()
+        
+        do {
+            resultsFetchedFromCoreData = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("------------- ERROR IN FETCHING DATA FROM CORE DATA ----------- \\n \(error)")
+            fatalError()
+        }
+        
+        return resultsFetchedFromCoreData[0].value(forKey: "priority") as? String         
     }
     
     // MARK: - Delete all Checklist Functions
