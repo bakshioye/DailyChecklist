@@ -22,11 +22,18 @@ class ChecklistViewController: UIViewController {
     var textFieldForChecklistName: UITextField!
     
     // MARK: - Custom variables to be created
+    
+    /// Current checklist object
     var checklist:Checklist!
     
-    var selectedChecklist:NSManagedObject? // This will contain the user selected checklist as returned from Core Data
+    /// This will contain the user selected checklist as returned from Core Data
+    var selectedChecklist:NSManagedObject?
     
-    var editingModeEnabled:Bool = false // Used to detect whether the user wants to edit the checklist name and/or items
+    /// Used to detect whether the user wants to edit the checklist name and/or items
+    var editingModeEnabled:Bool = false
+    
+    /// Reset time for the checklist . **Can be nil**
+    var checklistResetTime: TimeDomain?
     
     // MARK: - Overiding inbuilt functions
     override func viewDidLoad() {
@@ -65,7 +72,13 @@ class ChecklistViewController: UIViewController {
         if segue.identifier == "settings" {
             
             if let checklistSettingsVC = segue.destination as? ChecklistSettingsViewController {
+                
+                // Passing certain values to the next View Controller
                 checklistSettingsVC.checklistUUID = (selectedChecklist!.value(forKey: "checklistID") as! UUID)
+                
+                checklistSettingsVC.priorityAlreadySet = checklist.priority
+                checklistSettingsVC.resetTimeAlreadySet = checklistResetTime
+                
             }
         }
         
@@ -113,10 +126,13 @@ extension ChecklistViewController {
         
         // Creating the instance of the checklist
         checklist = Checklist(checklistID: selectedChecklistUnwrapped.value(forKey: "checklistID") as! UUID,
-                              priority: ChecklistPriority(rawValue: selectedChecklistUnwrapped.value(forKey: "priority") as! String)! ,
+                              priority: ChecklistPriority(rawValue: selectedChecklistUnwrapped.value(forKey: "priority") as! String) ?? .None ,
                               name: selectedChecklistUnwrapped.value(forKey: "name") as! String,
                               creationDate: selectedChecklistUnwrapped.value(forKey: "creationDate") as! Date,
                               items: checklistItems)
+        
+        // Setting the reset time for the checklist
+        checklistResetTime = CoreDataOperations.shared.fetchResetTime(checklistID: checklist.checklistID)
         
         // Setting the name of the checklist
         titleLabel.text = checklist.name

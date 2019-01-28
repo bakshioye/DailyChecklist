@@ -160,7 +160,7 @@ class CoreDataOperations {
     // FIXME: In case the user wants to remove the reset time from the checklist, we need to handle it here by passing nil as the first parameter
     
     /**
-        Update the reset time for the checklist
+        Update the reset time for the checklist. Creates a new reset time for a checklist if one does not exist
      
         - Parameter time: New reset time
         - Parameter checklistID: UUID for the checklist to be updated
@@ -609,6 +609,45 @@ class CoreDataOperations {
         return resultsFetchedFromCoreData[0].value(forKey: "priority") as? String         
     }
     
+    /**
+        Updates the priority for a checklist
+     
+        - Parameter checklistID: ID for the checklist whose priority is to be updated
+        - Parameter newPriority: New priority value for the checklist
+     
+        - Returns: Result for querying the database
+    */
+    func updateChecklistPriority(for checklistID: UUID,newPriority: ChecklistPriority) -> DatabaseQueryResult {
+        
+        // Fetching the App Delegate object
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return .Failure }
+        
+        // Creating managed context object
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        // Creating a fetch request object
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: CoreDataEntities.List.rawValue)
+        fetchRequest.predicate = NSPredicate(format: "checklistID == %@", checklistID as CVarArg)
+        
+        var dataFetchedFromCoreData = [NSManagedObject]()
+        
+        do {
+            dataFetchedFromCoreData = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            fatalError("-------------- ERROR IN FETCHING CHECKLIST FROM CORE DATA ------------- \\n \(error)")
+        }
+        
+        dataFetchedFromCoreData[0].setValue(newPriority.rawValue, forKey: "priority")
+        
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            fatalError("-------------- ERROR IN SAVING CONTEXT OF CORE DATA ------------- \\n \(error)")
+        }
+        
+        return .Success
+    }
+    
     // MARK: - Delete all Checklist Functions
     
     /// For testing purpose only
@@ -725,6 +764,5 @@ extension CoreDataOperations {
         return convertListItemsToString(items: updatedChecklistListItems)
         
     }
-    
     
 }

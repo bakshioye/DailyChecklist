@@ -58,14 +58,23 @@ class NewChecklistViewController: UIViewController {
         // Fetching all the checklist items
         checklistItems = fetchChecklistItems()
         
+        // We created a seperate variable as we needed a checklistID for Reset Time
+        let checklistToBeCreated = Checklist(priority: prioritySelected ?? .None, name: checklistNameField.text!, creationDate: Date(), items: checklistItems)
+        
         // Inserting the Checklist into Core Data and checking the response
-        guard CoreDataOperations.shared.createNewChecklist(checklist: Checklist(priority: prioritySelected ?? .None, name: checklistNameField.text!, creationDate: Date(), items: checklistItems)) == .Success else {
+        guard CoreDataOperations.shared.createNewChecklist(checklist: checklistToBeCreated) == .Success else {
             
             // There was failure in creating checklist
             presentErrorAlert(title: "Checklist could not be created", message: "There was an error creating checklist at the moment, Please try again")
             return
             
         }
+        
+        // Inserting the Reset time for the same by checking whether the user has opted to insert a reset time for the checklist
+        if let resetTimeUnwrapped = resetTimeSelected {
+            _ = CoreDataOperations.shared.updateResetTime(resetTimeUnwrapped, checklistID: checklistToBeCreated.checklistID)
+        }
+        
         
         // Going back to HomeVC
         self.dismiss(animated: true, completion: nil)

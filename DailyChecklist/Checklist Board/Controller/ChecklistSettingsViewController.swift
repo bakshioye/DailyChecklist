@@ -64,7 +64,9 @@ class ChecklistSettingsViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         
-        // Transfer the data to the previous view controller
+        // Checking if we are moving to NewChecklistVC
+        
+        // Transfer the data to the previous view controller (NewChecklistVC)
         if let resetTime = resetTimeAlreadySet {
             // Reset time was removed from the checklist
             transferDataDelegate?.updateResetTime(newResetTime: resetTime)
@@ -309,6 +311,17 @@ extension ChecklistSettingsViewController: TransferData {
         
         prioritySelectionView.removeFromSuperview()
         prioritySelectionHeader(shouldBeAdded: false, selectionViewframe: nil)
+        
+        // Checking if we are creating a new checklist or updating an old checklist
+        guard checklistUUID != nil else {
+            return
+        }
+        
+        /// If we reach here, we are updating an old checklist and we have checklist UUID
+        // Updating the core data with the same
+        _ = CoreDataOperations.shared.updateChecklistPriority(for: checklistUUID!, newPriority: priority)
+        
+        
     }
    
 }
