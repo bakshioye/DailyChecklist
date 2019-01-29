@@ -41,10 +41,7 @@ class ChecklistViewController: UIViewController {
      
         // Hiding the keyboard when the user tapped anywhere else other than a text field
         hideKeyboardWhenTappedAround()
-        
-        // Disabling the Large title text for view controller
-        navigationController?.navigationBar.prefersLargeTitles = false
-        
+
         // Removing the seperator line between table view cells
         checklistTableView.separatorStyle = .none
     
@@ -62,7 +59,7 @@ class ChecklistViewController: UIViewController {
         
         deleteAnyEmptyFields()
         
-        CoreDataOperations.shared.updateChecklist(oldChecklist: selectedChecklist!, newChecklist: checklist)
+        _ = CoreDataOperations.shared.updateChecklist(oldChecklist: selectedChecklist!, newChecklist: checklist)
         
     }
     

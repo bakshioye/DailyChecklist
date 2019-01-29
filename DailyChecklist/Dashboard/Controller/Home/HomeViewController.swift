@@ -24,6 +24,9 @@ class HomeViewController: UIViewController {
     // MARK: - Overriding Inbuilt functions
     override func viewDidLoad() {
         super.viewDidLoad()
+    
+        
+        navigationController?.navigationItem.largeTitleDisplayMode = .automatic
         
     }
     
@@ -254,12 +257,13 @@ extension HomeViewController {
         
         for currentChecklist in checklists {
             
+            /// Here we check if there is a reset time associated with a particular checklist
             guard let resetTime = CoreDataOperations.shared.fetchResetTime(checklistID: currentChecklist.checklistID) else {
                 // There is no reset time set for this checklist
                 continue
             }
             
-            // Here we check if we need to update the reset time of the checklist
+            /// Here we check if we need to update the reset time of the checklist
             guard shouldChecklistBeReseted(checklistID: currentChecklist.checklistID, resetTime: resetTime) else {
                 // The time is not up yet
                 continue

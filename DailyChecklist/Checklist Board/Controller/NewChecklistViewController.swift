@@ -37,10 +37,7 @@ class NewChecklistViewController: UIViewController {
 
         // Removing the seperator line between table view cells
         checklistTableView.separatorStyle = .none
-        
-        // Disabling the Large title text for view controller
-        navigationController?.navigationBar.prefersLargeTitles = false
-        
+
         // Setting the delegate for the Checklist Name textField
         checklistNameField.delegate = self
     }
