@@ -28,10 +28,6 @@ class HomeCVCell: UICollectionViewCell {
         
         percentageLabel.textColor = UIColor(hexString: "#616161")
         
-//        setupChecklistProgress()
-        
-//        checklistProgressView.layer.borderWidth = 2.0
-        
     }
     
 }

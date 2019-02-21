@@ -20,7 +20,13 @@ class CoreDataOperations {
     private init() { }
     
     // MARK: - Checklist Functions
-    
+    /**
+        Creates a new Checklist
+     
+        - Parameter checklist: Checklist to be created
+     
+        - Returns: Status for updation of the reset time for checklist
+    */
     func createNewChecklist(checklist:Checklist) -> DatabaseQueryResult {
         
         // Fething the App Delegate object
@@ -61,6 +67,11 @@ class CoreDataOperations {
         
     }
     
+    /**
+        Fetches all the checklists that are present in Core Data
+     
+        - Returns: An array containing all the checklists as *NSManagedObject* . Returns *nil* if not checklist are present in the Core Data
+    */
     func fetchChecklists() -> [NSManagedObject]? {
         
         // Fething the App Delegate object
@@ -89,6 +100,14 @@ class CoreDataOperations {
         
     }
     
+    /**
+        Updates an already present checklist
+     
+        - Parameter oldChecklist: Already present checklise as *NSManagedObject*
+        - Parameter newChecklist: Updated checklist as *Checklist*
+     
+        - Returns: Status for updation of the reset time for checklist
+    */
     func updateChecklist(oldChecklist: NSManagedObject, newChecklist: Checklist) -> DatabaseQueryResult {
         
         // FIXME: Why is there NO ENTITY used inside this function
@@ -301,6 +320,13 @@ class CoreDataOperations {
     
     // MARK: - Custom Reset Time Functions
     
+    /**
+        Saves a custom reset time created by the user
+     
+        - Parameter customTime: Custom time created by the user
+     
+        - Returns: Status for updation of the reset time for checklist
+    */
     func saveCustomResetTime(_ customTime: TimeDomain) -> DatabaseQueryResult {
         
         // Fetching the App Delegate object
@@ -335,6 +361,11 @@ class CoreDataOperations {
         
     }
     
+    /**
+        Fetches all the custom time saved inside Core Data
+     
+        - Returns: An array of custom time
+    */
     func fetchSavedCustomResetTime() -> [TimeDomain] {
         
         var customResetTimes = [TimeDomain]()
