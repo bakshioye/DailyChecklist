@@ -9,13 +9,16 @@
 import Foundation
 
 struct Checklist {
+    
+    var index: Int
     var checklistID: UUID
     var name: String
     var creationDate: Date
     var items: [ListItem]
     var priority: ChecklistPriority
     
-    init(checklistID: UUID = UUID.init(),priority: ChecklistPriority, name: String, creationDate: Date, items: [ListItem]) {
+    init(checklistID: UUID = UUID.init(),index: Int, priority: ChecklistPriority, name: String, creationDate: Date, items: [ListItem]) {
+        self.index = index
         self.checklistID = checklistID
         self.priority = priority
         self.name = name

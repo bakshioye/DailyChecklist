@@ -122,7 +122,7 @@ extension ChecklistViewController {
         let checklistItems = convertStringToListItems(listItemsInString: selectedChecklistUnwrapped.value(forKey: "items") as! String)
         
         // Creating the instance of the checklist
-        checklist = Checklist(checklistID: selectedChecklistUnwrapped.value(forKey: "checklistID") as! UUID,
+        checklist = Checklist(checklistID: selectedChecklistUnwrapped.value(forKey: "checklistID") as! UUID, index: selectedChecklistUnwrapped.value(forKey: "index") as! Int,
                               priority: ChecklistPriority(rawValue: selectedChecklistUnwrapped.value(forKey: "priority") as! String) ?? .None ,
                               name: selectedChecklistUnwrapped.value(forKey: "name") as! String,
                               creationDate: selectedChecklistUnwrapped.value(forKey: "creationDate") as! Date,

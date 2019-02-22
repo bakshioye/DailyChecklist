@@ -14,6 +14,7 @@
     <entity name="List" representedClassName="List" syncable="YES" codeGenerationType="class">
         <attribute name="checklistID" optional="YES" attributeType="UUID" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="creationDate" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="index" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="items" attributeType="String" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
         <attribute name="priority" optional="YES" attributeType="String" syncable="YES"/>
@@ -29,7 +30,7 @@
     <elements>
         <element name="CustomResetTime" positionX="-38.859375" positionY="-112.078125" width="128" height="120"/>
         <element name="LastResetAtTime" positionX="-9" positionY="81" width="128" height="75"/>
-        <element name="List" positionX="-321.93359375" positionY="-159.98046875" width="128" height="120"/>
+        <element name="List" positionX="-321.93359375" positionY="-159.98046875" width="128" height="135"/>
         <element name="ResetTime" positionX="-317.21875" positionY="64.734375" width="128" height="135"/>
     </elements>
 </model>

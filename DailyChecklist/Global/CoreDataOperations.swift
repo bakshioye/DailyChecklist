@@ -679,6 +679,8 @@ class CoreDataOperations {
         return .Success
     }
     
+    // MARK: - Index for checklist
+    
     // MARK: - Delete all Checklist Functions
     
     /// For testing purpose only
@@ -797,3 +799,32 @@ extension CoreDataOperations {
     }
     
 }
+
+/// For reordering the cells using longPressGestrureRecognizer
+
+//fileprivate var longPressGesture: UILongPressGestureRecognizer!
+//
+//override func viewDidLoad() {
+//    super.viewDidLoad()
+//    longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(self.handleLongGesture(gesture:)))
+//    reorderCollectionView.addGestureRecognizer(longPressGesture)
+//}
+//
+//
+//@objc func handleLongGesture(gesture: UILongPressGestureRecognizer) {
+//    switch(gesture.state) {
+//
+//    case .began:
+//        guard let selectedIndexPath = reorderCollectionView.indexPathForItem(at: gesture.location(in: reorderCollectionView)) else {
+//            break
+//        }
+//        reorderCollectionView.beginInteractiveMovementForItem(at: selectedIndexPath)
+//    case .changed:
+//        reorderCollectionView.updateInteractiveMovementTargetPosition(gesture.location(in: gesture.view!))
+//    case .ended:
+//        reorderCollectionView.endInteractiveMovement()
+//    default:
+//        reorderCollectionView.cancelInteractiveMovement()
+//    }
+//}
+//view raw

@@ -55,8 +55,11 @@ class NewChecklistViewController: UIViewController {
         // Fetching all the checklist items
         checklistItems = fetchChecklistItems()
         
+        // Creating an index for the new checklist
+        let indexForNewChecklist = CoreDataOperations.shared.fetchChecklists() != nil ? CoreDataOperations.shared.fetchChecklists()!.count + 1 : 1
+        
         // We created a seperate variable as we needed a checklistID for Reset Time
-        let checklistToBeCreated = Checklist(priority: prioritySelected ?? .None, name: checklistNameField.text!, creationDate: Date(), items: checklistItems)
+        let checklistToBeCreated = Checklist(index: indexForNewChecklist, priority: prioritySelected ?? .None, name: checklistNameField.text!, creationDate: Date(), items: checklistItems)
         
         // Inserting the Checklist into Core Data and checking the response
         guard CoreDataOperations.shared.createNewChecklist(checklist: checklistToBeCreated) == .Success else {
