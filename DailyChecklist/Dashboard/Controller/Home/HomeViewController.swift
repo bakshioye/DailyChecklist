@@ -25,8 +25,13 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     
-        
+        // Setting the large display mode for the Navigation bar title
         navigationController?.navigationItem.largeTitleDisplayMode = .automatic
+        
+        // Setting the long press getsure recognizer for reordering the collection view items
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(actionForLongPressGesture(_:)))
+        longPressGestureRecognizer.minimumPressDuration = 0.5
+        checklistCollectionView.addGestureRecognizer(longPressGestureRecognizer)
         
     }
     
@@ -55,8 +60,15 @@ class HomeViewController: UIViewController {
         
         // Here we are creating a timer which will run every minute as the shortest time that we have is 1 minute
         resetTimeChecker = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(actionForResetTimeChecker), userInfo: nil, repeats: true)
+
+        // Sorting the checklists according to their index values i.e. their positions in the list
+        let checklistSortedAsPerIndex = checklistsFetched.sorted { (firstChecklist, secondChecklist) -> Bool in
+            return (firstChecklist.value(forKey: "index") as! Int) < (secondChecklist.value(forKey: "index") as! Int)
+        }
         
-        checklistsArray = checklistsFetched
+        checklistsArray = checklistSortedAsPerIndex
+        
+        // Reloading the data
         checklistCollectionView.reloadData()
     
     }
@@ -147,6 +159,22 @@ extension HomeViewController: UICollectionViewDelegate {
         checklistDetailVCObject.selectedChecklist = checklistsArray[indexPath.row]
         
         self.navigationController?.pushViewController(checklistDetailVCObject, animated: true)
+
+    }
+    
+    // Used when we are dragging and dropping the collection view cells
+    func collectionView(_ collectionView: UICollectionView, canMoveItemAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        
+        /// Debugging
+        print("Source: \(sourceIndexPath.item) Destination: \(destinationIndexPath.item)")
+        
+        // Here i make changes to the database regarding the index for checklists that are removed
+        
+        
         
         
     }
@@ -280,7 +308,26 @@ extension HomeViewController {
         
         checklistsArray = checklistsFetched
         checklistCollectionView.reloadData()
+    }
+    
+    @objc func actionForLongPressGesture(_ gestureRecognizer: UILongPressGestureRecognizer) {
         
+        switch(gestureRecognizer.state) {
+            
+            case .began:
+                guard let selectedIndexPath = checklistCollectionView.indexPathForItem(at: gestureRecognizer.location(in: checklistCollectionView)) else {
+                    break
+                }
+                
+                checklistCollectionView.beginInteractiveMovementForItem(at: selectedIndexPath)
+            
+            case .changed:
+                    checklistCollectionView.updateInteractiveMovementTargetPosition(gestureRecognizer.location(in: gestureRecognizer.view!))
+            case .ended:
+                    checklistCollectionView.endInteractiveMovement()
+            default:
+                    checklistCollectionView.cancelInteractiveMovement()
+                }
         
     }
     

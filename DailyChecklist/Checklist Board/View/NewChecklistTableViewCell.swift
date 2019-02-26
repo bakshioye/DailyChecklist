@@ -21,6 +21,8 @@ class NewChecklistTableViewCell: UITableViewCell {
         
         selectionStyle = .none
         
+        itemNameField.returnKeyType = .done
+        
     }
 
 }

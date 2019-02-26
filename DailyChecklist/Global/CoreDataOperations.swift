@@ -49,6 +49,7 @@ class CoreDataOperations {
         
         // Setting the values for various attributes
         list.setValue(checklist.name, forKey: "name")
+        list.setValue(checklist.index, forKey: "index")
         list.setValue(checklist.priority.rawValue, forKey: "priority")
         list.setValue(itemsConvertedToString, forKey: "items")
         list.setValue(checklist.creationDate, forKey: "creationDate")
@@ -681,12 +682,35 @@ class CoreDataOperations {
     
     // MARK: - Index for checklist
     
+    func changeIndexForChecklist(_ checklistUUID: UUID, newIndex: Int) {
+        
+        // Fetching the App Delegate object
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        
+        // Fetching the managed context object
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        // Creating the fetch request object
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: CoreDataEntities.List.rawValue)
+        fetchRequest.predicate = NSPredicate(format: "checklistID == %@", checklistUUID as CVarArg)
+        
+        // This will hold the checklist coming from Core Data
+        var checklistFetchedFromCoreData = try! managedContext.fetch(fetchRequest)
+        
+        // Changing the index value for the checklist
+        checklistFetchedFromCoreData[0].setValue(newIndex, forKey: "index")
+        
+        // Saving the changes to the Core Data
+        try! managedContext.save()
+        
+    }
+    
     // MARK: - Delete all Checklist Functions
     
     /// For testing purpose only
     func deleteAllChecklists() -> DatabaseQueryResult {
         
-        
+        // Fetching the App Delegate object
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return .Failure }
         
         // Grabbing the NSManagedObject context

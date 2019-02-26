@@ -251,6 +251,16 @@ extension NewChecklistViewController: UITextFieldDelegate {
     
     }
     
+    
+    // Called when return key is pressed
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        // To hide the keyboard when return key is tapped on the keyboard
+        self.view.endEditing(true)
+        return false
+        
+    }
+    
 //    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 //
 //        switch textField {
