@@ -60,13 +60,9 @@ class HomeViewController: UIViewController {
         
         // Here we are creating a timer which will run every minute as the shortest time that we have is 1 minute
         resetTimeChecker = Timer.scheduledTimer(timeInterval: 60, target: self, selector: #selector(actionForResetTimeChecker), userInfo: nil, repeats: true)
-
-        // Sorting the checklists according to their index values i.e. their positions in the list
-        let checklistSortedAsPerIndex = checklistsFetched.sorted { (firstChecklist, secondChecklist) -> Bool in
-            return (firstChecklist.value(forKey: "index") as! Int) < (secondChecklist.value(forKey: "index") as! Int)
-        }
         
-        checklistsArray = checklistSortedAsPerIndex
+        // Passing the checklist array to a global variable to be used anywhere
+        checklistsArray = checklistsFetched
         
         // Reloading the data
         checklistCollectionView.reloadData()
@@ -169,13 +165,39 @@ extension HomeViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         
-        /// Debugging
-        print("Source: \(sourceIndexPath.item) Destination: \(destinationIndexPath.item)")
+//        /// Debugging
+//        print("Source: \(sourceIndexPath.item) Destination: \(destinationIndexPath.item)")
         
-        // Here i make changes to the database regarding the index for checklists that are removed
+        /// Here i make changes to the database regarding the index for checklists that are removed
         
+        // First, i will make changes to the item's index whose location has been changed
+        CoreDataOperations.shared.changeIndexForChecklist(checklistsArray[sourceIndexPath.item].value(forKey: "checklistID") as! UUID, newIndex: destinationIndexPath.item + 1) // +1 as we have index values as 1 based and .item is 0 based
         
+        // We are moving the checklist below
+        if sourceIndexPath.item < destinationIndexPath.item {
+            
+            for currentIndex in stride(from: sourceIndexPath.item + 1, through: destinationIndexPath.item, by: 1) {
+                
+                let currentChecklist = checklistsArray[currentIndex]
+                
+                CoreDataOperations.shared.changeIndexForChecklist(currentChecklist.value(forKey: "checklistID") as! UUID, newIndex: currentChecklist.value(forKey: "index") as! Int - 1)
+            }
+            
+        }
+        // We are moving the checklist above
+        else {
+            
+            for currentIndex in stride(from: sourceIndexPath.item - 1, through: destinationIndexPath.item, by: -1) {
+                
+                let currentChecklist = checklistsArray[currentIndex]
+                
+                CoreDataOperations.shared.changeIndexForChecklist(currentChecklist.value(forKey: "checklistID") as! UUID, newIndex: currentChecklist.value(forKey: "index") as! Int + 1)
+                
+            }
+            
+        }
         
+        viewDidAppear(true)
         
     }
     

@@ -85,6 +85,7 @@ class CoreDataOperations {
         
         // Creating a fetch request object
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: CoreDataEntities.List.rawValue)
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "index", ascending: true)]
         
         // Creating an array of managed object to fetch from core data and return it
         var checklistsAsManagedObjectsFetched = [NSManagedObject]()
