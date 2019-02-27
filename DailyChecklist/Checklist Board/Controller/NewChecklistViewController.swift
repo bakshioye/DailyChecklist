@@ -31,6 +31,13 @@ class NewChecklistViewController: UIViewController {
     /// The priority selected for the checklist . **Can be nil**
     var prioritySelected: ChecklistPriority?
     
+    /**
+        Used to store all the checklist items entered by user
+     
+        - Note: It will be used when we are calling prepareForReuse() and furthur cellForRowAtIndexPath()
+    */
+    var itemsNameArray = [String]()
+    
     // MARK: - Overriding inbuilt functions
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +47,13 @@ class NewChecklistViewController: UIViewController {
 
         // Setting the delegate for the Checklist Name textField
         checklistNameField.delegate = self
+        
+        // Capitalises the first letter of the sentence
+        checklistNameField.autocapitalizationType = .sentences
+        
+        // Changing the text on the keyboard from "return" to "done"
+        checklistNameField.returnKeyType = .done
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -111,13 +125,22 @@ extension NewChecklistViewController {
         
         for currentIndex in 0...checklistTableView.numberOfRows(inSection: 0) - 2 { // -1 for Add more row and -1 since array is 0 index based and numberOfRows returns 1 index based result
             
+            // Checking if the cell is Checklist Item cell
             guard let cell = checklistTableView.cellForRow(at: IndexPath(row: currentIndex, section: 0)) as? NewChecklistTableViewCell else {
                 continue
             }
             
+            // Checking if the list has some item(or text) or not
+            guard cell.itemNameField.text?.trimmingCharacters(in: .whitespacesAndNewlines) != "" else {
+                continue
+            }
+            
+            // Fetching the item name
             guard let itemName = cell.itemNameField.text else {
                 continue
             }
+            
+            
             
             listItemsArray.append(ListItem(name: itemName, isCompleted: false))
             
@@ -151,11 +174,20 @@ extension NewChecklistViewController: UITableViewDataSource {
             return cell
         }
         
-        
+        // We are entering checklist items, so display that cell accordingly
         let cell = tableView.dequeueReusableCell(withIdentifier: NEW_CHECKLIST_TABLEVIEW_CELL_ID, for: indexPath) as! NewChecklistTableViewCell
         
         cell.itemNameField.delegate = self
         cell.itemNameField.becomeFirstResponder()
+        
+        // Used to identify which table's cell is being edited
+        cell.itemNameField.tag = indexPath.row
+        
+        // Checking if there is already some data inside for the cell's text field
+        // This will only be called when we are scrolling and prepareForReuse() is being called
+        if itemsNameArray.indices.contains(indexPath.row) {
+            cell.itemNameField.text = itemsNameArray[indexPath.row]
+        }
         
         return cell
         
@@ -180,15 +212,18 @@ extension NewChecklistViewController: UITableViewDelegate {
                 return
             }
             
-            if textField.text?.count == 0 {
+            if textField.text?.count == 0 || (textField.text?.trimmingCharacters(in: .whitespaces).isEmpty)! {
                 
                 // There is an empty NewChecklist row above, so we need not add one more row
                 // We are animating for the animating text field
                 
-                UIView.animate(withDuration: 1.0, delay: 0, options: [.curveEaseInOut], animations: {
+                // Resetting the text so that placeholder will appear
+                textField.text = ""
+                
+                UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseInOut], animations: {
                     textField.layer.backgroundColor = UIColor(hexString: "#7cb342").cgColor
                 }) { (Bool) in
-                    UIView.animate(withDuration: 1.0, delay: 0, options: [.curveEaseInOut], animations: {
+                    UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseInOut], animations: {
                         textField.layer.backgroundColor = UIColor.clear.cgColor
                     }, completion: nil)
                 }
@@ -247,7 +282,17 @@ extension NewChecklistViewController: UITextFieldDelegate {
         
         if textField == checklistNameField {
             checklistNameBottomBorder.backgroundColor = UIColor.darkGray
+            return
         }
+        
+        /// Appending the text inside the array so that when we scroll down and then back up,it calls prepareForReuse() and furthur cellForRowAtIndexPath() , it would know what data to put inside the cell when we scroll back up instead of just clearing all the text inside the textField
+        if itemsNameArray.indices.contains(textField.tag) {
+            itemsNameArray[textField.tag] = textField.text!
+        }
+        else { // We dont have cell for that text inside array
+            itemsNameArray.append(textField.text!)
+        }
+        
     
     }
     
@@ -260,6 +305,8 @@ extension NewChecklistViewController: UITextFieldDelegate {
         return false
         
     }
+    
+    
     
 //    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
 //

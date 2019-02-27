@@ -147,7 +147,7 @@ extension ChecklistViewController {
         
         for currentItem in checklist.items {
             
-            if currentItem.name == "\\n" {
+            if currentItem.name == "\\n" || currentItem.name.trimmingCharacters(in: .whitespaces).isEmpty {
                 checklist.items.remove(at: currentIndex)
             }
             
@@ -305,17 +305,20 @@ extension ChecklistViewController: UITableViewDelegate {
             }
             
             // If the row above has it's textField shown , then the user can edit or add some new item , so we cannot add a new row below it
-            if !textField.isHidden {
+            if !textField.isHidden || (textField.text?.trimmingCharacters(in: .whitespaces).isEmpty)! {
                 
                 // There is an empty ChecklistCell row above, so we need not add one more row
                 // We are animating for the animating text field
                 
                 // FIXME: - Animation here is not working as expected
                 
-                UIView.animate(withDuration: 1.0, delay: 0, options: [.curveEaseInOut], animations: {
+                // Resetting the text so that placeholder will appear
+                textField.text = ""
+                
+                UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseInOut], animations: {
                     textField.layer.backgroundColor = UIColor(hexString: "#7cb342").cgColor
                 }) { (Bool) in
-                    UIView.animate(withDuration: 1.0, delay: 0, options: [.curveEaseInOut], animations: {
+                    UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseInOut], animations: {
                         textField.layer.backgroundColor = UIColor.clear.cgColor
                     }, completion: nil)
                 }
@@ -324,7 +327,7 @@ extension ChecklistViewController: UITableViewDelegate {
                 
             }
             
-            // We are just appending some garbage data to the Checklist Items as in order to increase the rows upon clicking AddMore button, we need to increase the array otherwise the app will crash
+            // We are just appending some garbage data to the Checklist Items as in order to increase the rows upon clicking AddMore button; we need to increase the array otherwise the app will crash
 
             checklist.items.append(ListItem(name: "\\n", isCompleted: false))
             tableView.insertRows(at: [IndexPath(row: indexPath.row, section: indexPath.section)], with: .bottom)
